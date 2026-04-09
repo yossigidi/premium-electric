@@ -54,6 +54,48 @@ function generateReply(text) {
       products: comps,
     }
   }
+  if (/(מקרר|קירור|fridge|refriger)/i.test(q)) {
+    const items = products.filter((p) => p.category === 'refrigerators').sort((a, b) => b.rating - a.rating).slice(0, 3)
+    return {
+      text: 'המקררים האינטגרליים הטובים ביותר שלנו — ממותגים אירופאיים כמו Miele, Liebherr ו-Gaggenau:',
+      products: items,
+    }
+  }
+  if (/(כיריים|כירה|אינדוקצי|cooktop|induction)/i.test(q)) {
+    const items = products.filter((p) => p.category === 'cooktops').sort((a, b) => b.rating - a.rating).slice(0, 3)
+    return {
+      text: 'כיריים אינדוקציה פרימיום — מבישול מדויק עד משטח מלא:',
+      products: items,
+    }
+  }
+  if (/(תנור|אפייה|oven|bake)/i.test(q)) {
+    const items = products.filter((p) => p.category === 'ovens').sort((a, b) => b.rating - a.rating).slice(0, 3)
+    return {
+      text: 'התנורים המתקדמים בקטלוג שלנו — פירוליטיים, קומבי-קיטור ו-Sous Vide:',
+      products: items,
+    }
+  }
+  if (/(מכונת כביסה|כביסה|washer|laundry)/i.test(q)) {
+    const items = products.filter((p) => p.category === 'washers').sort((a, b) => b.rating - a.rating).slice(0, 3)
+    return {
+      text: 'מכונות כביסה יוקרתיות — Miele שנבנתה ל-20 שנות שימוש, V-Zug שוויצרי, ועוד:',
+      products: items,
+    }
+  }
+  if (/(מייבש|ייבוש|dryer|tumble)/i.test(q)) {
+    const items = products.filter((p) => p.category === 'dryers').sort((a, b) => b.rating - a.rating).slice(0, 3)
+    return {
+      text: 'מייבשים עם משאבת חום — חיסכון אדיר בחשמל ועדינות מקסימלית לבגדים:',
+      products: items,
+    }
+  }
+  if (/(מטבח|kitchen)/i.test(q)) {
+    const kitchen = products.filter((p) => ['refrigerators', 'cooktops', 'ovens'].includes(p.category)).sort((a, b) => b.rating - a.rating).slice(0, 3)
+    return {
+      text: 'הנה שלושת מוצרי המטבח המובילים שלנו — הבסיס למטבח בסטנדרט של שפים:',
+      products: kitchen,
+    }
+  }
 
   // Shipping
   if (/(משלוח|שילוח|להביא|הבאה|עד הבית|delivery)/i.test(q)) {
@@ -125,7 +167,7 @@ export default function AIChatBot() {
     {
       role: 'bot',
       text: 'שלום! 👋 אני **שרית**, העוזרת הדיגיטלית של פרימיום אלקטריק. אשמח לעזור לכם למצוא את המוצר המושלם או לענות על שאלות.',
-      quickReplies: ['המלצה לטלוויזיה', 'מערכת שמע', 'מחשב גיימינג', 'מידע על משלוחים'],
+      quickReplies: ['המלצה לטלוויזיה', 'מקרר Miele', 'תנור אפייה', 'מכונת כביסה', 'מידע על משלוחים'],
     },
   ])
   const [typing, setTyping] = useState(false)

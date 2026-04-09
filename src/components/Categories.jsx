@@ -28,7 +28,7 @@ export default function Categories() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="group relative h-[480px] rounded-2xl overflow-hidden border border-white/5 hover:border-gold-400/40 transition-all duration-700"
+              className="group relative h-[400px] rounded-2xl overflow-hidden border border-white/5 hover:border-gold-400/40 transition-all duration-700"
             >
               <img
                 src={c.image}
