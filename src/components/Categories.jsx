@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { categories } from '../data/products'
+import { useRouter } from '../router'
 
 export default function Categories() {
+  const { navigate } = useRouter()
   return (
     <section id="categories" className="relative py-28">
       <div className="container-luxe">
@@ -16,19 +18,19 @@ export default function Categories() {
               כל קטגוריה נאספה בקפידה. אנחנו לא מוכרים הכל — אנחנו מוכרים רק את מה שהיינו קונים לעצמנו.
             </p>
           </div>
-          <a href="#featured" className="btn-ghost">לקולקציה המלאה <ArrowLeft size={16} /></a>
+          <button onClick={() => navigate('/search')} className="btn-ghost">לקולקציה המלאה <ArrowLeft size={16} /></button>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {categories.map((c, i) => (
-            <motion.a
+            <motion.button
               key={c.id}
-              href={`#${c.id}`}
+              onClick={() => navigate(`/search?cat=${c.id}`)}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="group relative h-[400px] rounded-2xl overflow-hidden border border-white/5 hover:border-gold-400/40 transition-all duration-700"
+              className="group relative h-[400px] rounded-2xl overflow-hidden border border-white/5 hover:border-gold-400/40 transition-all duration-700 text-right"
             >
               <img
                 src={c.image}
@@ -47,7 +49,7 @@ export default function Categories() {
                   גלה עכשיו <ArrowLeft size={16} />
                 </div>
               </div>
-            </motion.a>
+            </motion.button>
           ))}
         </div>
       </div>
