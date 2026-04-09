@@ -62,7 +62,7 @@ function ProductPageContent({ product }) {
   }
 
   return (
-    <div className="pt-24 md:pt-32 pb-32 lg:pb-20 min-h-screen">
+    <div className="pt-24 md:pt-32 lg:pt-44 pb-32 lg:pb-20 min-h-screen">
       {/* Breadcrumbs */}
       <div className="container-luxe py-6">
         <nav className="flex items-center gap-2 text-sm text-white/50 flex-wrap">

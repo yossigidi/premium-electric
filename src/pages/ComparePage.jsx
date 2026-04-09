@@ -39,7 +39,7 @@ export default function ComparePage() {
   const dimKeys = Array.from(new Set(items.flatMap((p) => Object.keys(p.dimensions))))
 
   return (
-    <div className="pt-24 md:pt-32 pb-20 min-h-screen">
+    <div className="pt-24 md:pt-32 lg:pt-44 pb-20 min-h-screen">
       <div className="container-luxe">
         <div className="flex items-center justify-between mb-10 flex-wrap gap-4">
           <div>

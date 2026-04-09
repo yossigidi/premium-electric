@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X, SlidersHorizontal, Star, Check, ArrowDownNarrowWide } from 'lucide-react'
 import { products, categories, brands } from '../data/products'
@@ -14,9 +14,16 @@ const sortOptions = [
   { id: 'rating',    label: 'דירוג גבוה ביותר' },
 ]
 
+function parseParams() {
+  return new URLSearchParams(window.location.hash.split('?')[1] || '')
+}
+
 export default function SearchPage() {
-  const [query, setQuery] = useState(() => new URLSearchParams(window.location.hash.split('?')[1] || '').get('q') || '')
-  const [cats, setCats] = useState([])
+  const [query, setQuery] = useState(() => parseParams().get('q') || '')
+  const [cats, setCats] = useState(() => {
+    const cat = parseParams().get('cat')
+    return cat ? [cat] : []
+  })
   const [brandSel, setBrandSel] = useState([])
   const [priceMax, setPriceMax] = useState(PRICE_BOUNDS[1])
   const [minRating, setMinRating] = useState(0)
@@ -24,6 +31,18 @@ export default function SearchPage() {
   const [onlyDiscount, setOnlyDiscount] = useState(false)
   const [sort, setSort] = useState('popular')
   const [mobileFilters, setMobileFilters] = useState(false)
+
+  // React to hash changes (e.g., clicking a different category in the navbar)
+  useEffect(() => {
+    const onHashChange = () => {
+      const params = parseParams()
+      setQuery(params.get('q') || '')
+      const cat = params.get('cat')
+      setCats(cat ? [cat] : [])
+    }
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -71,7 +90,7 @@ export default function SearchPage() {
   )
 
   return (
-    <div className="pt-24 md:pt-32 pb-20 min-h-screen">
+    <div className="pt-24 md:pt-32 lg:pt-44 pb-20 min-h-screen">
       <div className="container-luxe">
         <div className="text-center mb-10">
           <h1 className="section-title">
