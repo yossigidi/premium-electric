@@ -31,11 +31,12 @@ export default function ProductCard({ product, index = 0 }) {
       className="card-luxe group p-4 flex flex-col"
     >
       {/* Image with link */}
-      <Link to={href} className="relative aspect-[4/3] rounded-xl overflow-hidden bg-ink-800 block">
+      <Link to={href} className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gradient-to-br from-white to-neutral-100 block">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          loading="lazy"
+          className="w-full h-full object-contain p-4 transition-transform duration-700 group-hover:scale-105"
         />
         {product.badge && (
           <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-gold-gradient text-ink-900 text-xs font-bold">

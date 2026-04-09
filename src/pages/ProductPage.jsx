@@ -117,15 +117,17 @@ function ProductPageContent({ product }) {
                 <Scale size={16} />
               </button>
             </div>
-            <motion.img
-              key={activeImage}
-              initial={{ opacity: 0, scale: 1.02 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
-              src={product.images[activeImage]}
-              alt={product.name}
-              className="w-full h-[560px] object-cover"
-            />
+            <div className="w-full h-[560px] bg-gradient-to-br from-white to-neutral-100">
+              <motion.img
+                key={activeImage}
+                initial={{ opacity: 0, scale: 1.02 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+                src={product.images[activeImage]}
+                alt={product.name}
+                className="w-full h-full object-contain p-8"
+              />
+            </div>
           </motion.div>
 
           {/* Thumbnails */}
@@ -134,13 +136,13 @@ function ProductPageContent({ product }) {
               <button
                 key={i}
                 onClick={() => setActiveImage(i)}
-                className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                className={`relative aspect-square rounded-xl overflow-hidden border-2 bg-gradient-to-br from-white to-neutral-100 transition-all duration-300 ${
                   activeImage === i
                     ? 'border-gold-400 shadow-gold-glow'
                     : 'border-white/5 opacity-60 hover:opacity-100 hover:border-white/20'
                 }`}
               >
-                <img src={img} alt="" className="w-full h-full object-cover" />
+                <img src={img} alt="" className="w-full h-full object-contain p-2" />
               </button>
             ))}
           </div>

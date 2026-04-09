@@ -1,13 +1,20 @@
 // Curated luxury demo catalog with full product details.
-// Real product images from manufacturer CDNs and Wikimedia Commons.
+// Real product images from Israeli retailers (Ivory, Bug, Miele Israel) and manufacturer CDNs.
 // This mapping overrides the per-product `image` and `images` fields at the bottom of this file.
 const PRODUCT_IMAGES = {
   // ===== Televisions =====
-  1: [ // LG OLED G4 — LG official CDN
-    'https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/04b71684-166f-4333-896a-76e61d94ac78/TV_OLED97G4WUA_gallery-01_3000x3000',
-    'https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/0e7a9c95-c2ba-48a0-8da4-b7e2671d1531/TV_OLED_G4_S95TR_2024_USP_Card_Perfect-Matching_2000x2000',
+  1: [ // LG OLED G4 77" — Ivory Israel (real LG G4 product photos)
+    'https://www.ivory.co.il/files/Product%20Sheet%20New/LgOLEDevoAiG4/DESKTOP1.webp',
+    'https://www.ivory.co.il/files/Product%20Sheet%20New/LgOLEDevoAiG4/DESKTOP2%20copy.webp',
+    'https://www.ivory.co.il/files/Product%20Sheet%20New/LgOLEDevoAiG4/DESKTOP3%20copy.webp',
+    'https://www.ivory.co.il/files/Product%20Sheet%20New/LgOLEDevoAiG4/DESKTOP4%20copy.webp',
+    'https://www.ivory.co.il/files/Product%20Sheet%20New/LgOLEDevoAiG4/DESKTOP5%20copy.webp',
   ],
-  2: [ // Samsung QN900D — Samsung official CDN
+  2: [ // Samsung QN900D — Bug Israel (real product shots)
+    'https://www.bug.co.il/images/site/products/ppf_2563c5d3-6ad6-4af7-90fa-4be43fc2817b_prvdsk.webp',
+    'https://www.bug.co.il/images/site/products/b756c8da-3b6e-49ab-bf1e-e53521ff77f6_prvdsk.webp',
+    'https://www.bug.co.il/images/site/products/e2242c2a-02af-44d0-a54c-eb57fe49e92c_prvdsk.webp',
+    'https://www.bug.co.il/images/site/products/d4a995ca-cb55-46f8-ba07-67f2f02293d5_prvdsk.webp',
     'https://image-us.samsung.com/SamsungUS/home/television-home-theater/tvs/07252024/QN65QN900DFXZA-S.COM_Version_1_V01.jpg',
   ],
   3: [ // Sony BRAVIA A95L — Wikimedia (Sony Bravia)
@@ -15,22 +22,22 @@ const PRODUCT_IMAGES = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Televisore_Sony_da_43_pollici.jpg/1200px-Televisore_Sony_da_43_pollici.jpg',
   ],
   // ===== Audio =====
-  4: [ // Bang & Olufsen Beolab 50 — B&O official CDN (Contentful)
+  4: [ // Bang & Olufsen Beolab 50 — B&O official CDN
     'https://images.ctfassets.net/8cd2csgvqd3m/7tCmkiPHmdj97isdJbR1Xz/b2ad499c55848c4774549850053d48b3/bl50_fabric_pair.png',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Bang_Olufsen_Beovision_TV_Avant_mx5000_Austin_Calhoon_Photograph.jpg/1200px-Bang_Olufsen_Beovision_TV_Avant_mx5000_Austin_Calhoon_Photograph.jpg',
   ],
   5: [ // Devialet Phantom — Devialet official CDN
     'https://www.devialet.com/media/dvl_media/KW898_Visual_Packshot_Devialet_Phantom_Ultimate_108dB_LP_2_1.png',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Devialet_Phantom_speaker_%2816948765420%29.jpg/1200px-Devialet_Phantom_speaker_%2816948765420%29.jpg',
   ],
-  6: [ // Sonos Arc Ultra — Sonos official CDN
+  6: [ // Sonos Arc Ultra — Bug Israel + Sonos official CDN
+    'https://www.bug.co.il/images/site/products/ppf_66f66976-f786-4932-9422-aa6ced6d598d_prvdsk.webp',
     'https://media.sonos.com/images/znqtjj88/production/a27135e0222d228e5ab9c49c6d8b34472c7bd0df-2000x2000.png',
     'https://media.sonos.com/images/znqtjj88/production/8ab6acffdf1378d8176351732c34ef0c5b33f2d7-2480x2480.jpg',
     'https://media.sonos.com/images/znqtjj88/production/a49e196bcae4958f391ba2ede13b9135e530c7ff-2880x2880.png',
     'https://media.sonos.com/images/znqtjj88/production/b4a63ab9e8160922284b13732478b56db8bea5ab-2480x2480.jpg',
   ],
   // ===== Computers =====
-  7: [ // Apple MacBook Pro — Apple official CDN
+  7: [ // Apple MacBook Pro 16 — Apple official CDN
     'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/mac-macbook-pro-size-unselect-202601-gallery-1?wid=5120&hei=3280&fmt=jpeg&qlt=90&.v=1767812220981',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/MacBook_Pro_16_%28M1_Pro%2C_2021%29_-_Wikipedia.jpg/1200px-MacBook_Pro_16_%28M1_Pro%2C_2021%29_-_Wikipedia.jpg',
   ],
@@ -38,59 +45,55 @@ const PRODUCT_IMAGES = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/DELL_XPS_13_and_15_%2837080596413%29.jpg/1200px-DELL_XPS_13_and_15_%2837080596413%29.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Dell_XPS_15_%282017%29.png/1200px-Dell_XPS_15_%282017%29.png',
   ],
-  9: [ // Alienware Aurora — Wikimedia (Alienware)
+  9: [ // Alienware Aurora — Wikimedia
     'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Alienware_m15x_Laptop.jpg/1200px-Alienware_m15x_Laptop.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Alienware_M14x_%282%29.jpg/1200px-Alienware_M14x_%282%29.jpg',
   ],
   // ===== Refrigerators =====
-  10: [ // Miele KF 2982 Vi — Wikimedia (refrigerator)
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/A_Samsung_Refrigerator.jpg/1200px-A_Samsung_Refrigerator.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Open_refrigerator_with_food_at_night.jpg/1200px-Open_refrigerator_with_food_at_night.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/LG_refrigerator_interior.jpg/1200px-LG_refrigerator_interior.jpg',
+  10: [ // Miele KF 2982 Vi — Miele Israel freestanding fridge (closest Miele IL model)
+    'https://miele.co.il/wp-content/uploads/2021/12/FN28262Dedt_1.png',
+    'https://miele.co.il/wp-content/uploads/2021/12/FN28262Dedt_2.png',
   ],
-  11: [ // Liebherr Monolith MRB 3600 — Wikimedia (refrigerator)
+  11: [ // Liebherr Monolith — Wikimedia fridge
     'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Open_refrigerator_with_food_at_night.jpg/1200px-Open_refrigerator_with_food_at_night.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/A_Samsung_Refrigerator.jpg/1200px-A_Samsung_Refrigerator.jpg',
   ],
-  12: [ // Gaggenau Vario 400 — Wikimedia (refrigerator)
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Fridgeinterior.jpg/1200px-Fridgeinterior.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/A_Samsung_Refrigerator.jpg/1200px-A_Samsung_Refrigerator.jpg',
+  12: [ // Gaggenau Vario 400 RC 492 — BSH Group official CDN (real product shot)
+    'https://media3.bsh-group.com/Product_Shots/MCSA02440414_i4271_1817871_RC492704_cmyk_def.webp',
+    'https://media3.bsh-group.com/Product_Shots/20007224_GG_GL_Cooling_400_4IS03R_us_3_def.png',
   ],
   // ===== Cooktops =====
-  13: [ // Miele KM 7897 FL — Wikimedia (induction cooktop)
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Kookplaat_inductie.JPG/1200px-Kookplaat_inductie.JPG',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/InductionsStove_3.jpg/1200px-InductionsStove_3.jpg',
+  13: [ // Miele KM (cooktop) — Miele Israel KM 7465 FL (real Miele induction cooktop)
+    'https://miele.co.il/wp-content/uploads/2021/12/KM-7465-FL-PNG.png',
   ],
-  14: [ // Gaggenau CX 482 — Wikimedia (induction cooktop)
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/InductionsStove_3.jpg/1200px-InductionsStove_3.jpg',
+  14: [ // Gaggenau CX 482 — BSH Group CDN (Gaggenau Vario 400 series)
+    'https://media3.bsh-group.com/Product_Shots/20007224_GG_GL_Cooling_400_4IS03R_us_3_def.png',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Kookplaat_inductie.JPG/1200px-Kookplaat_inductie.JPG',
   ],
   // ===== Ovens =====
-  15: [ // Miele H 7860 BP — Wikimedia (oven)
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Double_oven.jpg/1200px-Double_oven.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Oven.agr.jpg/1200px-Oven.agr.jpg',
+  15: [ // Miele H (oven) — Miele Israel H 7260 BP (real Miele pyrolytic oven)
+    'https://miele.co.il/wp-content/uploads/2022/01/H7260-BP-B-4.png',
   ],
-  16: [ // Gaggenau BO 470 — Wikimedia (oven)
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Oven.agr.jpg/1200px-Oven.agr.jpg',
+  16: [ // Gaggenau BO 470 — Wikimedia oven
     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Double_oven.jpg/1200px-Double_oven.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Oven.agr.jpg/1200px-Oven.agr.jpg',
   ],
   // ===== Washers =====
-  17: [ // Miele W1 WSR 863 — Wikimedia (Miele washer — real Miele!)
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Wasmachine_van_Miele.jpg/1200px-Wasmachine_van_Miele.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Miele_Softtronic_WT_2670_Waschtrockner.jpg/1200px-Miele_Softtronic_WT_2670_Waschtrockner.jpg',
+  17: [ // Miele W1 washer — Miele Israel WWV 980 WPS (real Miele W1 TwinDos washer)
+    'https://miele.co.il/wp-content/uploads/2021/12/WWV-980-1.png',
+    'https://miele.co.il/wp-content/uploads/2021/12/WWV-980-2.png',
   ],
-  18: [ // V-Zug AdoraWash V4000 — Wikimedia (washing machine)
+  18: [ // V-Zug AdoraWash — Miele Israel WWV 980 (fallback — real luxury washer)
+    'https://miele.co.il/wp-content/uploads/2021/12/WWV-980-2.png',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Washing_Machine_Beko.jpg/1200px-Washing_Machine_Beko.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Wasmachine_van_Miele.jpg/1200px-Wasmachine_van_Miele.jpg',
   ],
   // ===== Dryers =====
-  19: [ // Miele T1 TSR 863 — Wikimedia (dryer)
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Hitachi_Washer-dryer_BD-SV120KL.jpg/1200px-Hitachi_Washer-dryer_BD-SV120KL.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Whirlpool_Cabrio_Dryer.jpg/1200px-Whirlpool_Cabrio_Dryer.jpg',
+  19: [ // Miele T1 dryer — Miele Israel TWJ 660 WP (real Miele heat pump dryer)
+    'https://miele.co.il/wp-content/uploads/2021/12/TWJ-660-WP_1.png',
   ],
-  20: [ // AEG 9000 — Wikimedia (dryer)
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Whirlpool_Cabrio_Dryer.jpg/1200px-Whirlpool_Cabrio_Dryer.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Hitachi_Washer-dryer_BD-SV120KL.jpg/1200px-Hitachi_Washer-dryer_BD-SV120KL.jpg',
+  20: [ // AEG 9000 dryer — Miele Israel TWV 680 WP (fallback — real heat pump dryer)
+    'https://miele.co.il/wp-content/uploads/2021/12/TWV680-1.png',
+    'https://miele.co.il/wp-content/uploads/2021/12/TWV680-2.png',
   ],
 }
 
