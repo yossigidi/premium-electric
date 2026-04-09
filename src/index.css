@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html, body { background-color: #050505; }
+
+::selection { background: #d4af37; color: #050505; }
+
+/* Elegant scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0a0a0b; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#8f6f1f,#d4af37); border-radius: 10px; }
+
+@layer components {
+  .container-luxe {
+    @apply max-w-7xl mx-auto px-6 lg:px-10;
+  }
+  .btn-gold {
+    @apply relative inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-ink-900
+           bg-gold-gradient transition-all duration-300
+           hover:shadow-gold-glow hover:-translate-y-0.5 active:translate-y-0;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-white
+           border border-white/15 hover:border-gold-400 hover:text-gold-300
+           transition-all duration-300;
+  }
+  .chip {
+    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium
+           bg-white/5 text-gold-300 border border-gold-400/20;
+  }
+  .gold-text {
+    background: linear-gradient(135deg,#f5ecc7 0%,#d4af37 45%,#8f6f1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .section-title {
+    @apply font-display text-4xl md:text-5xl font-bold tracking-tight;
+  }
+  .hair-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212,175,55,0.5), transparent);
+  }
+  .card-luxe {
+    @apply relative overflow-hidden rounded-2xl bg-ink-700/60 backdrop-blur-sm
+           border border-white/5 hover:border-gold-400/30 transition-all duration-500;
+  }
+  .card-luxe::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(600px circle at var(--x,50%) var(--y,0%), rgba(212,175,55,0.08), transparent 40%);
+    opacity: 0; transition: opacity .5s;
+    pointer-events: none;
+  }
+  .card-luxe:hover::before { opacity: 1; }
+}
