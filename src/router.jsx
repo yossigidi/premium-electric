@@ -1,13 +1,15 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 
-/** Simple hash-based router: #/ , #/product/:id */
+/** Hash-based router: #/ , #/product/:id , #/search , #/compare */
 const RouterContext = createContext(null)
 
 function parseHash() {
   const hash = window.location.hash.replace(/^#/, '') || '/'
   if (hash === '/' || hash === '') return { name: 'home' }
-  const m = hash.match(/^\/product\/(\d+)/)
-  if (m) return { name: 'product', id: Number(m[1]) }
+  const mProd = hash.match(/^\/product\/(\d+)/)
+  if (mProd) return { name: 'product', id: Number(mProd[1]) }
+  if (hash.startsWith('/search')) return { name: 'search' }
+  if (hash.startsWith('/compare')) return { name: 'compare' }
   return { name: 'home' }
 }
 
@@ -40,7 +42,6 @@ export function useRouter() {
   return ctx
 }
 
-/** Anchor that navigates via hash */
 export function Link({ to, children, className, onClick, ...props }) {
   const { navigate } = useRouter()
   return (

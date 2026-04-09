@@ -75,7 +75,7 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
-          <button className="p-2.5 rounded-full text-white/70 hover:text-gold-300 hover:bg-white/5 transition" aria-label="חיפוש">
+          <button onClick={() => navigate('/search')} className="p-2.5 rounded-full text-white/70 hover:text-gold-300 hover:bg-white/5 transition" aria-label="חיפוש">
             <Search size={20} />
           </button>
           <button className="hidden md:inline-flex p-2.5 rounded-full text-white/70 hover:text-gold-300 hover:bg-white/5 transition" aria-label="מועדפים">

@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion'
-import { Heart, ShoppingBag, Star, Eye } from 'lucide-react'
+import { Heart, ShoppingBag, Star, Eye, Scale } from 'lucide-react'
 import { Link } from '../router'
+import { useCompare } from '../contexts/CompareContext'
 
 const fmt = (n) => new Intl.NumberFormat('he-IL').format(n)
 
 export default function ProductCard({ product, index = 0 }) {
+  const { toggle, has, isFull } = useCompare()
+  const inCompare = has(product.id)
   const discount = product.oldPrice
     ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
     : 0
@@ -87,6 +90,19 @@ export default function ProductCard({ product, index = 0 }) {
             <div className="text-[10px] text-white/40">או 36 × ₪{fmt(perMonth)}</div>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              aria-label={inCompare ? 'הסר מהשוואה' : 'הוסף להשוואה'}
+              disabled={!inCompare && isFull}
+              onClick={(e) => { e.stopPropagation(); toggle(product.id) }}
+              className={`w-10 h-10 rounded-full border transition flex items-center justify-center ${
+                inCompare
+                  ? 'bg-gold-400 border-gold-400 text-ink-900'
+                  : 'bg-ink-900/60 border-white/10 text-white/60 hover:text-gold-300 hover:border-gold-400/40 disabled:opacity-30 disabled:cursor-not-allowed'
+              }`}
+              title={isFull && !inCompare ? 'מקסימום 4 מוצרים' : 'השוואה'}
+            >
+              <Scale size={15} />
+            </button>
             <button
               aria-label="הוסף למועדפים"
               className="w-10 h-10 rounded-full bg-ink-900/60 border border-white/10 text-white/60 hover:text-red-400 hover:border-red-400/40 transition flex items-center justify-center"

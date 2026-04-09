@@ -67,7 +67,7 @@ export default function Hero() {
               גלו את הקולקציה
               <ArrowLeft size={18} />
             </a>
-            <a href="#categories" className="btn-ghost">קטגוריות</a>
+            <a href="#/search" className="btn-ghost">חיפוש מתקדם</a>
           </motion.div>
 
           <motion.div

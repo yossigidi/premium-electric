@@ -8,6 +8,7 @@ import {
 import { getProductById, getRelatedProducts, categories } from '../data/products'
 import { Link, useRouter } from '../router'
 import ProductCard from '../components/ProductCard'
+import { useCompare } from '../contexts/CompareContext'
 
 const fmt = (n) => new Intl.NumberFormat('he-IL').format(n)
 
@@ -36,6 +37,7 @@ function ProductPageContent({ product }) {
   const [added, setAdded] = useState(false)
   const related = useMemo(() => getRelatedProducts(product), [product])
   const category = categories.find((c) => c.id === product.category)
+  const { toggle: toggleCompare, has: inCompare } = useCompare()
 
   const discount = product.oldPrice
     ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
@@ -103,7 +105,15 @@ function ProductPageContent({ product }) {
               <button className="w-10 h-10 rounded-full bg-ink-900/80 backdrop-blur border border-white/10 text-white/70 hover:text-gold-300 hover:border-gold-400/40 transition flex items-center justify-center">
                 <Share2 size={16} />
               </button>
-              <button className="w-10 h-10 rounded-full bg-ink-900/80 backdrop-blur border border-white/10 text-white/70 hover:text-gold-300 hover:border-gold-400/40 transition flex items-center justify-center" title="הוסף להשוואה">
+              <button
+                onClick={() => toggleCompare(product.id)}
+                title={inCompare(product.id) ? 'הסר מהשוואה' : 'הוסף להשוואה'}
+                className={`w-10 h-10 rounded-full backdrop-blur border flex items-center justify-center transition ${
+                  inCompare(product.id)
+                    ? 'bg-gold-400 border-gold-400 text-ink-900'
+                    : 'bg-ink-900/80 border-white/10 text-white/70 hover:text-gold-300 hover:border-gold-400/40'
+                }`}
+              >
                 <Scale size={16} />
               </button>
             </div>
