@@ -3,7 +3,7 @@ import { ArrowLeft, Sparkles, ShieldCheck, Truck } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section id="top" className="relative min-h-screen flex items-center overflow-hidden pt-20">
+    <section id="top" className="relative min-h-screen flex items-center overflow-hidden pt-20 md:pt-28">
       {/* Background image */}
       <div className="absolute inset-0">
         <img

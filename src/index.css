@@ -50,6 +50,9 @@ html, body { background-color: #050505; }
     @apply relative overflow-hidden rounded-2xl bg-ink-700/60 backdrop-blur-sm
            border border-white/5 hover:border-gold-400/30 transition-all duration-500;
   }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
   .card-luxe::before {
     content: '';
     position: absolute; inset: 0;

@@ -1,27 +1,29 @@
+import { RouterProvider, useRouter } from './router'
 import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Categories from './components/Categories'
-import FeaturedProducts from './components/FeaturedProducts'
-import Showcase from './components/Showcase'
-import Brands from './components/Brands'
-import Testimonials from './components/Testimonials'
-import Newsletter from './components/Newsletter'
 import Footer from './components/Footer'
+import HomePage from './pages/HomePage'
+import ProductPage from './pages/ProductPage'
+import TopBar from './components/TopBar'
 
-export default function App() {
+function Shell() {
+  const { route } = useRouter()
   return (
     <div className="relative">
+      <TopBar />
       <Navbar />
       <main>
-        <Hero />
-        <Categories />
-        <FeaturedProducts />
-        <Showcase />
-        <Brands />
-        <Testimonials />
-        <Newsletter />
+        {route.name === 'home'    && <HomePage />}
+        {route.name === 'product' && <ProductPage id={route.id} />}
       </main>
       <Footer />
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <RouterProvider>
+      <Shell />
+    </RouterProvider>
   )
 }
