@@ -39,7 +39,7 @@ export default function Navbar() {
   }, [])
 
   const goCategory = (catId) => {
-    navigate(`/search?cat=${catId}`)
+    navigate(`/category/${catId}`)
     setOpen(false)
   }
 

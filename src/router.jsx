@@ -8,6 +8,8 @@ function parseHash() {
   if (hash === '/' || hash === '') return { name: 'home' }
   const mProd = hash.match(/^\/product\/(\d+)/)
   if (mProd) return { name: 'product', id: Number(mProd[1]) }
+  const mCat = hash.match(/^\/category\/([^?/]+)/)
+  if (mCat) return { name: 'category', catId: decodeURIComponent(mCat[1]) }
   if (hash.startsWith('/search')) return { name: 'search' }
   if (hash.startsWith('/compare')) return { name: 'compare' }
   return { name: 'home' }

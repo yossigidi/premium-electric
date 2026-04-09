@@ -70,7 +70,7 @@ function ProductPageContent({ product }) {
             <Home size={14} /> דף הבית
           </Link>
           <ChevronLeft size={14} className="text-white/30" />
-          <Link to="/" className="hover:text-gold-300">{category?.name}</Link>
+          <Link to={`/category/${category?.id}`} className="hover:text-gold-300">{category?.name}</Link>
           <ChevronLeft size={14} className="text-white/30" />
           <span className="text-white/80 truncate">{product.name}</span>
         </nav>

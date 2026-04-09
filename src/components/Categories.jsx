@@ -25,7 +25,7 @@ export default function Categories() {
           {categories.map((c, i) => (
             <motion.button
               key={c.id}
-              onClick={() => navigate(`/search?cat=${c.id}`)}
+              onClick={() => navigate(`/category/${c.id}`)}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}

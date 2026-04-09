@@ -13,6 +13,7 @@ import HomePage from './pages/HomePage'
 import ProductPage from './pages/ProductPage'
 import SearchPage from './pages/SearchPage'
 import ComparePage from './pages/ComparePage'
+import CategoryPage from './pages/CategoryPage'
 
 function Shell() {
   const { route } = useRouter()
@@ -21,10 +22,11 @@ function Shell() {
       <TopBar />
       <Navbar />
       <main>
-        {route.name === 'home'    && <HomePage />}
-        {route.name === 'product' && <ProductPage id={route.id} />}
-        {route.name === 'search'  && <SearchPage />}
-        {route.name === 'compare' && <ComparePage />}
+        {route.name === 'home'     && <HomePage />}
+        {route.name === 'product'  && <ProductPage id={route.id} />}
+        {route.name === 'category' && <CategoryPage key={route.catId} catId={route.catId} />}
+        {route.name === 'search'   && <SearchPage />}
+        {route.name === 'compare'  && <ComparePage />}
       </main>
       <Footer />
 
