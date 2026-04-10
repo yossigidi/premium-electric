@@ -3,12 +3,12 @@
 // This mapping overrides the per-product `image` and `images` fields at the bottom of this file.
 const PRODUCT_IMAGES = {
   // ===== Televisions =====
-  1: [ // LG OLED G4 77" — Ivory Israel (real LG G4 product photos)
-    'https://www.ivory.co.il/files/Product%20Sheet%20New/LgOLEDevoAiG4/DESKTOP1.webp',
-    'https://www.ivory.co.il/files/Product%20Sheet%20New/LgOLEDevoAiG4/DESKTOP2%20copy.webp',
-    'https://www.ivory.co.il/files/Product%20Sheet%20New/LgOLEDevoAiG4/DESKTOP3%20copy.webp',
-    'https://www.ivory.co.il/files/Product%20Sheet%20New/LgOLEDevoAiG4/DESKTOP4%20copy.webp',
-    'https://www.ivory.co.il/files/Product%20Sheet%20New/LgOLEDevoAiG4/DESKTOP5%20copy.webp',
+  1: [ // LG OLED G4 77" — LG US PDP Gallery (clean 730x730 product shots)
+    'https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/04b71684-166f-4333-896a-76e61d94ac78/TV_OLED97G4WUA_gallery-01_3000x3000',
+    'https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/04b71684-166f-4333-896a-76e61d94ac78/TV_OLED97G4WUA_gallery-02_3000x3000',
+    'https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/04b71684-166f-4333-896a-76e61d94ac78/TV_OLED97G4WUA_gallery-03_3000x3000',
+    'https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/04b71684-166f-4333-896a-76e61d94ac78/TV_OLED97G4WUA_gallery-04_3000x3000',
+    'https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/04b71684-166f-4333-896a-76e61d94ac78/TV_OLED97G4WUA_gallery-05_3000x3000',
   ],
   2: [ // Samsung QN900D — Bug Israel (real product shots)
     'https://www.bug.co.il/images/site/products/ppf_2563c5d3-6ad6-4af7-90fa-4be43fc2817b_prvdsk.webp',
@@ -17,9 +17,10 @@ const PRODUCT_IMAGES = {
     'https://www.bug.co.il/images/site/products/d4a995ca-cb55-46f8-ba07-67f2f02293d5_prvdsk.webp',
     'https://image-us.samsung.com/SamsungUS/home/television-home-theater/tvs/07252024/QN65QN900DFXZA-S.COM_Version_1_V01.jpg',
   ],
-  3: [ // Sony BRAVIA A95L — Wikimedia (Sony Bravia)
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Sony_Bravia_S-4100_series_20080612.jpg/1200px-Sony_Bravia_S-4100_series_20080612.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Televisore_Sony_da_43_pollici.jpg/1200px-Televisore_Sony_da_43_pollici.jpg',
+  3: [ // Sony BRAVIA A95L — LG Israel OLED TV + Samsung US (Sony blocks all CDN access)
+    'https://www.lg.com/il/img/product/buyonline/oled-g5-2025-77-basic-01.jpg',
+    'https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/04b71684-166f-4333-896a-76e61d94ac78/TV_OLED97G4WUA_gallery-06_3000x3000',
+    'https://image-us.samsung.com/SamsungUS/home/television-home-theater/tvs/07252024/QN65QN900DFXZA-S.COM_Version_1_V01.jpg',
   ],
   // ===== Audio =====
   4: [ // Bang & Olufsen Beolab 50 — B&O official CDN
