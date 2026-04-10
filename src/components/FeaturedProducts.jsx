@@ -1,45 +1,47 @@
-import { useState } from 'react'
-import { products, categories } from '../data/products'
+import { motion } from 'framer-motion'
+import { ArrowLeft, Flame, Sparkles } from 'lucide-react'
+import { products } from '../data/products'
+import { Link } from '../router'
 import ProductCard from './ProductCard'
 
-const filters = [{ id: 'all', name: 'הכל' }, ...categories.map((c) => ({ id: c.id, name: c.name }))]
+// Show ONLY products with a badge (new arrival, sale, bestseller) — max 6
+const featured = products
+  .filter((p) => p.badge || p.oldPrice)
+  .sort((a, b) => {
+    // Prioritize: חדש first, then sales (oldPrice), then bestsellers
+    const aScore = (a.badge?.includes('חדש') ? 3 : 0) + (a.oldPrice ? 2 : 0) + (a.badge ? 1 : 0)
+    const bScore = (b.badge?.includes('חדש') ? 3 : 0) + (b.oldPrice ? 2 : 0) + (b.badge ? 1 : 0)
+    return bScore - aScore
+  })
+  .slice(0, 6)
 
 export default function FeaturedProducts() {
-  const [active, setActive] = useState('all')
-  const list = active === 'all' ? products : products.filter((p) => p.category === active)
-
   return (
     <section id="featured" className="relative py-28 bg-ink-800/50">
       <div className="absolute inset-0 bg-radial-glow opacity-50" />
       <div className="container-luxe relative">
-        <div className="text-center mb-14">
-          <div className="chip mb-4">קולקציית בחירה</div>
-          <h2 className="section-title">
-            הפריטים ה<span className="gold-text">נחשקים</span> ביותר
-          </h2>
-          <p className="mt-4 text-white/60 max-w-xl mx-auto">
-            נבחרו ידנית על ידי צוות המומחים שלנו — רק מה שעובר בקרת איכות מדוקדקת מגיע לקולקציה.
-          </p>
-        </div>
-
-        <div className="flex justify-center gap-2 mb-12 flex-wrap">
-          {filters.map((f) => (
-            <button
-              key={f.id}
-              onClick={() => setActive(f.id)}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
-                active === f.id
-                  ? 'bg-gold-gradient text-ink-900 shadow-gold-glow'
-                  : 'bg-white/5 text-white/70 border border-white/10 hover:border-gold-400/30 hover:text-gold-300'
-              }`}
-            >
-              {f.name}
-            </button>
-          ))}
+        <div className="flex items-end justify-between mb-14 flex-wrap gap-6">
+          <div>
+            <div className="chip mb-4">
+              <Flame size={14} />
+              מבצעים וחדשים
+            </div>
+            <h2 className="section-title">
+              לא לפספס <span className="gold-text">עכשיו</span>
+            </h2>
+            <p className="mt-4 text-white/60 max-w-lg">
+              מוצרים חדשים שהגיעו למלאי ופריטים במבצע מיוחד — לזמן מוגבל.
+            </p>
+          </div>
+          <Link to="/search" className="btn-ghost">
+            <Sparkles size={16} />
+            כל המוצרים
+            <ArrowLeft size={16} />
+          </Link>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {list.map((p, i) => (
+          {featured.map((p, i) => (
             <ProductCard key={p.id} product={p} index={i} />
           ))}
         </div>
