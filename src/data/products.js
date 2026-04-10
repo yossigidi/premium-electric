@@ -96,6 +96,20 @@ const PRODUCT_IMAGES = {
     'https://miele.co.il/wp-content/uploads/2021/12/TWV680-1.png',
     'https://miele.co.il/wp-content/uploads/2021/12/TWV680-2.png',
   ],
+  // ===== Robot Vacuums =====
+  21: [ // Dreame X40 Ultra — Dreame official Shopify CDN
+    'https://cdn.shopify.com/s/files/1/0553/1320/3405/files/X40_Ultra_00e2273a-e2b7-4f6b-9997-d4f3f6039d03.jpg',
+    'https://cdn.shopify.com/s/files/1/0553/1320/3405/files/x40-ultra-media-icon_1.webp',
+  ],
+  22: [ // MOVA S20 Ultra — MOVA US Shopify CDN
+    'https://cdn.shopify.com/s/files/1/0712/8245/8860/files/Nav_-_Robot_Vacuum_-_S20_Ultra.png',
+  ],
+  23: [ // Roborock S8 MaxV Ultra — Bug Israel
+    'https://cdn.bug.co.il/images/site/products//105ab036-d9b8-4235-9799-89ac04f68e94.jpg',
+  ],
+  24: [ // Ecovacs DEEBOT X2 Omni — Bug Israel
+    'https://cdn.bug.co.il/images/site/products//e20459c6-bc52-4416-b971-4b513b320d26.jpg',
+  ],
 }
 
 export const categories = [
@@ -154,6 +168,13 @@ export const categories = [
     tagline: 'Miele · AEG · Bosch',
     description: 'משאבת חום — חיסכון של עד 60% בחשמל',
     image: 'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?auto=format&fit=crop&w=1600&q=80',
+  },
+  {
+    id: 'robot-vacuums',
+    name: 'שואבים רובוטיים',
+    tagline: 'Dreame · MOVA · Roborock · Ecovacs',
+    description: 'שואבים-שוטפים אוטומטיים שעושים הכל לבד',
+    image: 'https://cdn.shopify.com/s/files/1/0553/1320/3405/files/X40_Ultra_00e2273a-e2b7-4f6b-9997-d4f3f6039d03.jpg',
   },
 ];
 
@@ -1595,6 +1616,283 @@ export const products = [
       support: 'תמיכה בעברית.',
     },
   },
+
+  // ============================ Robot Vacuums ============================
+  {
+    id: 21,
+    slug: 'dreame-x40-ultra',
+    name: 'Dreame X40 Ultra',
+    category: 'robot-vacuums',
+    brand: 'Dreame',
+    model: 'X40 Ultra',
+    sku: 'DREAME-X40U',
+    price: 3990,
+    oldPrice: 4490,
+    rating: 4.9,
+    reviews: 1842,
+    badge: 'חדש 2026',
+    inStock: true,
+    stockCount: 18,
+    image: 'https://cdn.shopify.com/s/files/1/0553/1320/3405/files/X40_Ultra_00e2273a-e2b7-4f6b-9997-d4f3f6039d03.jpg',
+    images: [],
+    tags: ['12,000Pa', 'AI Navigation', 'Hot Mop Wash', 'Auto Drain'],
+    shortDescription: 'שואב-שוטף רובוטי עם יניקה של 12,000Pa, ניווט AI מתקדם, שטיפת מגבים במים חמים 70°C ועמדת בסיס שעושה הכל — מרוקנת, ממלאת, מייבשת ומנקה את עצמה.',
+    description: [
+      'Dreame X40 Ultra הוא שואב-שוטף רובוטי מהמתקדמים בעולם. כוח יניקה של 12,000Pa — חזק פי 3 מדגמים רגילים — מסלק אבק, שערות חיות ולכלוך עמוק משטיחים וריצוף בלי מאמץ.',
+      'מערכת ניווט AI 3D עם LiDAR וזיהוי מכשולים מזהה מעל 70 סוגי עצמים (נעליים, כבלים, צעצועים) ומתמרנת סביבם. תכנון מסלול חכם מבטיח כיסוי 100% של הבית ללא אזורים שנשכחו.',
+      'עמדת הבסיס All-in-One מבצעת ריקון אבק אוטומטי (עד 75 יום), שטיפת מגבים במים חמים 70°C, ייבוש אוויר חם, מילוי מים נקיים וניקוז מים מלוכלכים — הכל אוטומטי. חיבור למים ולביוב אופציונלי.',
+    ],
+    features: [
+      { title: '12,000Pa יניקה', text: 'החזק בשוק — מנקה שטיחים עבים ושערות חיות' },
+      { title: 'AI 3D Navigation', text: 'LiDAR + זיהוי 70+ מכשולים' },
+      { title: 'שטיפה ב-70°C', text: 'מגבים נשטפים במים חמים — ללא חיידקים' },
+      { title: 'Auto Drain', text: 'חיבור למים — 0 תחזוקה' },
+      { title: 'זרוע מגב מתרחבת', text: 'מגיע לפינות ולצמוד לקירות' },
+      { title: 'אפליקציה + קולי', text: 'Alexa, Google Home, Mi Home' },
+    ],
+    specs: {
+      'יניקה וניקוי': [
+        { label: 'כוח יניקה', value: '12,000Pa' },
+        { label: 'שטיפה', value: 'מגבים סיבובים כפולים' },
+        { label: 'הרמת מגב אוטומטית', value: 'כן (12 מ״מ)' },
+      ],
+      'ניווט': [
+        { label: 'סנסור', value: 'LiDAR + מצלמה RGB + 3D ToF' },
+        { label: 'זיהוי מכשולים', value: '70+ סוגים (AI)' },
+        { label: 'מיפוי', value: 'רב-קומתי עד 4 מפות' },
+      ],
+      'עמדת בסיס': [
+        { label: 'שטיפת מגבים', value: '70°C מים חמים' },
+        { label: 'ריקון אבק', value: 'אוטומטי (75 יום)' },
+        { label: 'Auto Drain', value: 'חיבור ביוב אופציונלי' },
+      ],
+      'סוללה': [
+        { label: 'קיבולת', value: '5,200mAh' },
+        { label: 'זמן עבודה', value: 'עד 170 דקות' },
+      ],
+    },
+    dimensions: {
+      'רובוט קוטר': '35.3 ס״מ',
+      'רובוט גובה': '10.4 ס״מ',
+      'עמדת בסיס': '60.4 × 43.4 × 52.2 ס״מ',
+      'משקל רובוט': '4.8 ק״ג',
+    },
+    warranty: {
+      period: '2 שנים',
+      details: 'אחריות יבואן רשמי 2 שנים כולל חלקים, עבודה ושירות.',
+      includes: ['חלקים', 'עבודה', 'שירות בבית'],
+    },
+    service: {
+      delivery: 'משלוח חינם תוך 48 שעות',
+      installation: 'הפעלה ראשונית והדרכת אפליקציה טלפונית חינם.',
+      support: 'תמיכה בעברית.',
+    },
+  },
+  {
+    id: 22,
+    slug: 'mova-s20-ultra',
+    name: 'MOVA S20 Ultra',
+    category: 'robot-vacuums',
+    brand: 'MOVA',
+    model: 'S20 Ultra',
+    sku: 'MOVA-S20U',
+    price: 2490,
+    rating: 4.7,
+    reviews: 634,
+    badge: 'מחיר מנצח',
+    inStock: true,
+    stockCount: 25,
+    image: 'https://cdn.shopify.com/s/files/1/0712/8245/8860/files/Nav_-_Robot_Vacuum_-_S20_Ultra.png',
+    images: [],
+    tags: ['8,300Pa', 'Hot Mop 140°F', 'Dual Roller', 'Self-Empty'],
+    shortDescription: 'שואב-שוטף רובוטי עם יניקה 8,300Pa, מברשת סיבוב כפולה, שטיפת מגבים ב-60°C ועמדה שמרוקנת, שוטפת ומייבשת — ביחס מחיר-ביצועים חסר תקדים.',
+    description: [
+      'MOVA S20 Ultra הוא הכוכב הפנימי של קטגוריית השואבים הרובוטיים — ביצועים ברמה של דגלים בחצי המחיר. יניקה 8,300Pa עם מברשת סיבוב כפולה שגורפת הכל.',
+      'מערכת שטיפה עם מגבים שנשטפים אוטומטית במים חמים 60°C. הרמת מגב חכמה בזיהוי שטיח — שואב את השטיח יבש ושוטף את הרצפה רטוב באותו סיבוב.',
+      'עמדת הבסיס All-in-One כוללת ריקון אבק אוטומטי לשקית 3 ליטר (עד 7 שבועות), מילוי מים אוטומטי, ייבוש מגבים באוויר חם. שליטה באפליקציה עם מיפוי מדויק ותמיכה בשליטה קולית.',
+    ],
+    features: [
+      { title: '8,300Pa יניקה', text: 'מברשת כפולה לניקוי עמוק' },
+      { title: 'שטיפה 60°C', text: 'מגבים רוטטים ב-180 סל״ד' },
+      { title: 'Auto Mop Lift', text: 'מרים מגבים אוטומטית על שטיחים' },
+      { title: 'Self-Empty 7 שבועות', text: 'שקית 3 ליטר — שוכחים מתחזוקה' },
+      { title: 'מיפוי LDS', text: 'ליידר 360° עם תכנון מסלול חכם' },
+      { title: 'שליטה קולית', text: 'Alexa + Google Assistant' },
+    ],
+    specs: {
+      'יניקה וניקוי': [
+        { label: 'כוח יניקה', value: '8,300Pa' },
+        { label: 'מברשת', value: 'Dual Roller Brush' },
+        { label: 'שטיפה', value: 'VibroTurbo 180 סל״ד' },
+      ],
+      'ניווט': [
+        { label: 'סנסור', value: 'LDS LiDAR 360°' },
+        { label: 'מיפוי', value: 'רב-קומתי' },
+      ],
+      'עמדת בסיס': [
+        { label: 'ריקון אבק', value: 'אוטומטי — 7 שבועות' },
+        { label: 'שטיפת מגבים', value: '60°C' },
+        { label: 'ייבוש', value: 'אוויר חם' },
+      ],
+      'סוללה': [
+        { label: 'קיבולת', value: '5,200mAh' },
+        { label: 'זמן עבודה', value: 'עד 170 דקות' },
+      ],
+    },
+    dimensions: {
+      'רובוט קוטר': '35 ס״מ',
+      'רובוט גובה': '10.5 ס״מ',
+      'משקל': '4.5 ק״ג',
+    },
+    warranty: {
+      period: '2 שנים',
+      details: 'אחריות יבואן 2 שנים כולל חלקים ועבודה.',
+      includes: ['חלקים', 'עבודה', 'שירות'],
+    },
+    service: {
+      delivery: 'משלוח חינם תוך 48 שעות',
+      installation: 'הפעלה ראשונית טלפונית חינם.',
+      support: 'תמיכה בעברית.',
+    },
+  },
+  {
+    id: 23,
+    slug: 'roborock-s8-maxv-ultra',
+    name: 'Roborock S8 MaxV Ultra',
+    category: 'robot-vacuums',
+    brand: 'Roborock',
+    model: 'S8 MaxV Ultra',
+    sku: 'ROBO-S8MAXVU',
+    price: 4490,
+    rating: 4.9,
+    reviews: 2103,
+    badge: 'הכי נמכר',
+    inStock: true,
+    stockCount: 12,
+    image: 'https://cdn.bug.co.il/images/site/products//105ab036-d9b8-4235-9799-89ac04f68e94.jpg',
+    images: [],
+    tags: ['10,000Pa', 'ReactiveAI 3D', 'Auto Refill & Drain', 'Dual Brush'],
+    shortDescription: 'דגל הפרימיום של Roborock — יניקה 10,000Pa, מצלמת ReactiveAI 3D שמזהה מכשולים ברמה של רכב אוטונומי, ועמדה עם חיבור לצנרת שמבטלת תחזוקה לגמרי.',
+    description: [
+      'Roborock S8 MaxV Ultra הוא השואב הרובוטי שהפך לסטנדרט בקטגוריית הפרימיום. יניקה 10,000Pa עם מברשת DuoRoller Rise שמסתגלת אוטומטית לגובה השטיח.',
+      'ReactiveAI 3D עם מצלמת RGB ו-3D ToF מזהה כל מכשול בזמן אמת ומגיב כמו מערכת נהיגה אוטונומית. הניווט LiDAR שמדויק ל-±2 ס״מ מבטיח שום אזור לא ייפגע.',
+      'עמדת RockDock Ultra מתחברת ישירות לברז המים ולצנרת הביוב — אפס תחזוקה. היא שוטפת את המגבים ב-60°C, מייבשת אותם באוויר חם, מרוקנת אבק לשקית 2.5 ליטר, ממלאת מים נקיים ומנקזת מלוכלכים. שליטה באפליקציית Roborock עם מפת בית תלת-ממדית.',
+    ],
+    features: [
+      { title: '10,000Pa יניקה', text: 'DuoRoller Rise שעולה אוטומטית על שטיחים' },
+      { title: 'ReactiveAI 3D', text: 'מצלמה + ToF לזיהוי מכשולים אוטונומי' },
+      { title: 'Auto Refill & Drain', text: 'חיבור לצנרת — 0 תחזוקה' },
+      { title: 'שטיפה 60°C + ייבוש', text: 'מגבים נקיים ויבשים תמיד' },
+      { title: 'FlexiArm', text: 'זרוע מברשת שמגיעה לפינות' },
+      { title: 'מפת בית 3D', text: 'אפליקציה עם תצוגה תלת-ממדית של הבית' },
+    ],
+    specs: {
+      'יניקה וניקוי': [
+        { label: 'כוח יניקה', value: '10,000Pa' },
+        { label: 'מברשת', value: 'DuoRoller Rise' },
+        { label: 'שטיפה', value: 'VibraRise 2.0' },
+      ],
+      'ניווט': [
+        { label: 'סנסור', value: 'LiDAR + ReactiveAI 3D' },
+        { label: 'דיוק', value: '±2 ס״מ' },
+        { label: 'מיפוי', value: 'רב-קומתי + 3D' },
+      ],
+      'עמדת בסיס': [
+        { label: 'שטיפה', value: '60°C + ייבוש אוויר חם' },
+        { label: 'ריקון', value: 'אוטומטי (70 יום)' },
+        { label: 'מים', value: 'Auto Refill + Drain לצנרת' },
+      ],
+      'סוללה': [
+        { label: 'קיבולת', value: '5,200mAh' },
+        { label: 'זמן עבודה', value: 'עד 180 דקות' },
+      ],
+    },
+    dimensions: {
+      'רובוט קוטר': '35.3 ס״מ',
+      'רובוט גובה': '10.3 ס״מ',
+      'עמדת בסיס': '42.2 × 50.4 × 56.4 ס״מ',
+      'משקל רובוט': '4.8 ק״ג',
+    },
+    warranty: {
+      period: '2 שנים',
+      details: 'אחריות יבואן רשמי 2 שנים כולל חלקים, עבודה ושירות בבית.',
+      includes: ['חלקים', 'עבודה', 'שירות בבית'],
+    },
+    service: {
+      delivery: 'משלוח חינם תוך 48 שעות',
+      installation: 'התקנת עמדה + חיבור לצנרת + הגדרת אפליקציה.',
+      support: 'תמיכה בעברית 24/7.',
+    },
+  },
+  {
+    id: 24,
+    slug: 'ecovacs-deebot-x2-omni',
+    name: 'Ecovacs DEEBOT X2 Omni',
+    category: 'robot-vacuums',
+    brand: 'Ecovacs',
+    model: 'DEEBOT X2 Omni',
+    sku: 'ECO-X2OMNI',
+    price: 3490,
+    oldPrice: 4290,
+    rating: 4.8,
+    reviews: 967,
+    badge: 'עיצוב מרובע',
+    inStock: true,
+    stockCount: 9,
+    image: 'https://cdn.bug.co.il/images/site/products//e20459c6-bc52-4416-b971-4b513b320d26.jpg',
+    images: [],
+    tags: ['8,000Pa', 'Square Design', 'YIKO Voice', 'OMNI Station'],
+    shortDescription: 'שואב רובוטי בעיצוב מרובע חדשני שמגיע לפינות — 8,000Pa יניקה, מערכת YIKO לשליטה קולית טבעית, ועמדת OMNI עם ריקון וניקוי אוטומטי.',
+    description: [
+      'Ecovacs DEEBOT X2 Omni שובר מוסכמות עם עיצוב מרובע (D-Shape) שנכנס לפינות ולצמוד לקירות — מקום שרובוטים עגולים פשוט מפספסים. המכשיר דק במיוחד (9.5 ס״מ) ועובר מתחת לספות ולמיטות.',
+      'מערכת ניווט AIVI 3D 2.0 עם מצלמה סטריאוסקופית ו-LiDAR מזהה מכשולים ובני אדם בזמן אמת. YIKO — העוזרת הקולית המובנית — מאפשרת לשלוט ברובוט בשפה טבעית ("תנקה את המטבח"), בלי אפליקציה ובלי Alexa.',
+      'עמדת OMNI Station שוטפת מגבים, מייבשת באוויר חם 40°C, מרוקנת אבק לתוך שקית, וממלאת מים נקיים — תחזוקה מינימלית. סוללה של 6,400mAh מאפשרת עד 3.5 שעות רצופות של עבודה.',
+    ],
+    features: [
+      { title: 'עיצוב מרובע', text: 'מגיע ב-100% לפינות ולקירות' },
+      { title: '8,000Pa יניקה', text: 'ניקוי עמוק של שטיחים וריצוף' },
+      { title: 'YIKO שליטה קולית', text: 'דיבור טבעי ישירות לרובוט' },
+      { title: 'AIVI 3D 2.0', text: 'זיהוי מכשולים סטריאוסקופי' },
+      { title: 'דק במיוחד 9.5 ס״מ', text: 'נכנס מתחת לכל רהיט' },
+      { title: 'סוללה 6,400mAh', text: 'עד 3.5 שעות עבודה רצופות' },
+    ],
+    specs: {
+      'יניקה וניקוי': [
+        { label: 'כוח יניקה', value: '8,000Pa' },
+        { label: 'שטיפה', value: 'OZMO Turbo 2.0 (180 סל״ד)' },
+        { label: 'עיצוב', value: 'D-Shape (מרובע)' },
+      ],
+      'ניווט': [
+        { label: 'סנסור', value: 'TrueDetect 3D 3.0 + LiDAR' },
+        { label: 'AI', value: 'AIVI 3D 2.0' },
+        { label: 'שליטה קולית', value: 'YIKO מובנה' },
+      ],
+      'עמדת OMNI': [
+        { label: 'שטיפת מגבים', value: 'אוטומטי + ייבוש 40°C' },
+        { label: 'ריקון אבק', value: 'אוטומטי' },
+        { label: 'מילוי מים', value: 'אוטומטי' },
+      ],
+      'סוללה': [
+        { label: 'קיבולת', value: '6,400mAh' },
+        { label: 'זמן עבודה', value: 'עד 210 דקות' },
+      ],
+    },
+    dimensions: {
+      'רובוט': '32 × 32 × 9.5 ס״מ',
+      'משקל רובוט': '4.4 ק״ג',
+      'עמדת OMNI': '42.8 × 40.4 × 57.8 ס״מ',
+    },
+    warranty: {
+      period: '2 שנים',
+      details: 'אחריות יבואן 2 שנים כולל חלקים ועבודה.',
+      includes: ['חלקים', 'עבודה', 'שירות'],
+    },
+    service: {
+      delivery: 'משלוח חינם עד הבית',
+      installation: 'הדרכת הפעלה טלפונית חינם.',
+      support: 'תמיכה בעברית.',
+    },
+  },
 ];
 
 export const brands = [
@@ -1602,6 +1900,7 @@ export const brands = [
   'Sony', 'Samsung', 'LG Signature', 'Bosch', 'Siemens',
   'Smeg', 'AEG', 'Apple', 'Devialet', 'Sonos',
   'Dell', 'Alienware', 'Bose',
+  'Dreame', 'MOVA', 'Roborock', 'Ecovacs',
 ];
 
 export const testimonials = [

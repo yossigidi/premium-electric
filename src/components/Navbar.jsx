@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import {
   Search, ShoppingBag, User, Menu, X, Heart,
-  Tv, Music2, Laptop, Snowflake, Flame, ChefHat, Droplets, Wind,
+  Tv, Music2, Laptop, Snowflake, Flame, ChefHat, Droplets, Wind, Bot,
   ChevronLeft,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -17,6 +17,7 @@ const CATEGORY_ICONS = {
   ovens:          ChefHat,
   washers:        Droplets,
   dryers:         Wind,
+  'robot-vacuums': Bot,
 }
 
 const topLinks = [

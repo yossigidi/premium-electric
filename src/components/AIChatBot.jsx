@@ -89,6 +89,13 @@ function generateReply(text) {
       products: items,
     }
   }
+  if (/(שואב|רובוט|vacuum|robot.*clean|dreame|mova|roborock|ecovacs)/i.test(q)) {
+    const items = products.filter((p) => p.category === 'robot-vacuums').sort((a, b) => b.rating - a.rating).slice(0, 3)
+    return {
+      text: 'הנה השואבים הרובוטיים שלנו — שואבים-שוטפים אוטומטיים מהמתקדמים בעולם:',
+      products: items,
+    }
+  }
   if (/(מטבח|kitchen)/i.test(q)) {
     const kitchen = products.filter((p) => ['refrigerators', 'cooktops', 'ovens'].includes(p.category)).sort((a, b) => b.rating - a.rating).slice(0, 3)
     return {
