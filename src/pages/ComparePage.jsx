@@ -15,8 +15,8 @@ export default function ComparePage() {
       <div className="pt-32 pb-20 min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md">
           <div className="text-6xl mb-6">⚖️</div>
-          <h1 className="font-display text-4xl text-white mb-3">ההשוואה ריקה</h1>
-          <p className="text-white/60 mb-8">בחרו מוצרים מהחנות כדי להשוות ביניהם מפרט, מחיר ותכונות.</p>
+          <h1 className="font-display text-4xl text-gray-900 mb-3">ההשוואה ריקה</h1>
+          <p className="text-gray-500 mb-8">בחרו מוצרים מהחנות כדי להשוות ביניהם מפרט, מחיר ותכונות.</p>
           <Link to="/" className="btn-gold">לחנות</Link>
         </div>
       </div>
@@ -46,7 +46,7 @@ export default function ComparePage() {
             <h1 className="section-title">
               השוואת <span className="gold-text">מוצרים</span>
             </h1>
-            <p className="mt-2 text-white/60">{items.length} מוצרים בהשוואה</p>
+            <p className="mt-2 text-gray-500">{items.length} מוצרים בהשוואה</p>
           </div>
           <button onClick={clear} className="btn-ghost text-sm">נקה הכל</button>
         </div>
@@ -56,32 +56,32 @@ export default function ComparePage() {
             {/* Header row — product cards */}
             <thead>
               <tr>
-                <th className="sticky right-0 bg-ink-900 z-10 w-48 text-right align-top p-4 text-sm text-white/50 font-semibold"></th>
+                <th className="sticky right-0 bg-white z-10 w-48 text-right align-top p-4 text-sm text-gray-400 font-semibold"></th>
                 {items.map((p) => (
                   <th key={p.id} className="align-top p-3 min-w-[240px]">
                     <div className="card-luxe p-4 relative">
                       <button
                         onClick={() => remove(p.id)}
-                        className="absolute top-2 left-2 w-8 h-8 rounded-full bg-ink-900/80 border border-white/10 text-white/60 hover:text-red-400 hover:border-red-400/40 flex items-center justify-center z-10"
+                        className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white/90 border border-gray-200 text-gray-500 hover:text-red-400 hover:border-red-400/40 flex items-center justify-center z-10"
                         aria-label="הסר"
                       >
                         <X size={14} />
                       </button>
                       <Link to={`/product/${p.id}`} className="block">
-                        <div className="aspect-[4/3] rounded-lg overflow-hidden bg-ink-800 mb-3">
+                        <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-50 mb-3">
                           <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
                         </div>
-                        <div className="text-xs text-gold-300 tracking-wider uppercase">{p.brand}</div>
-                        <div className="font-display text-lg font-bold text-white leading-snug mt-1 min-h-[48px]">{p.name}</div>
+                        <div className="text-xs text-gold-500 tracking-wider uppercase">{p.brand}</div>
+                        <div className="font-display text-lg font-bold text-gray-900 leading-snug mt-1 min-h-[48px]">{p.name}</div>
                       </Link>
                       <div className="mt-3 flex items-center gap-1">
-                        <Star size={14} className="fill-gold-400 text-gold-400" />
-                        <span className="text-white text-sm">{p.rating}</span>
-                        <span className="text-white/40 text-xs">({p.reviews})</span>
+                        <Star size={14} className="fill-gold-400 text-gold-500" />
+                        <span className="text-gray-700 text-sm">{p.rating}</span>
+                        <span className="text-gray-400 text-xs">({p.reviews})</span>
                       </div>
                       <div className="hair-divider my-3" />
                       <div className="text-2xl font-bold gold-text">₪{fmt(p.price)}</div>
-                      {p.oldPrice && <div className="text-xs text-white/40 line-through">₪{fmt(p.oldPrice)}</div>}
+                      {p.oldPrice && <div className="text-xs text-gray-400 line-through">₪{fmt(p.oldPrice)}</div>}
                       <button className="btn-gold w-full mt-3 !py-2 !px-3 text-xs justify-center">
                         <ShoppingBag size={14} /> קנה
                       </button>
@@ -136,7 +136,7 @@ export default function ComparePage() {
                     <ul className="space-y-2">
                       {p.features.slice(0, 5).map((f, i) => (
                         <li key={i} className="flex items-start gap-2 text-xs">
-                          <Check size={13} className="text-gold-300 mt-0.5 shrink-0" />
+                          <Check size={13} className="text-gold-500 mt-0.5 shrink-0" />
                           <span>{f.title}</span>
                         </li>
                       ))}
@@ -166,7 +166,7 @@ function GroupHeader({ span, title }) {
 function Row({ label, children }) {
   return (
     <tr className="group">
-      <td className="sticky right-0 bg-ink-900 z-10 px-4 py-3 text-sm text-white/60 font-semibold border-t border-white/5 text-right">
+      <td className="sticky right-0 bg-white z-10 px-4 py-3 text-sm text-gray-500 font-semibold border-t border-gray-100 text-right">
         {label}
       </td>
       {children}
@@ -176,7 +176,7 @@ function Row({ label, children }) {
 
 function Cell({ children, className = '' }) {
   return (
-    <td className={`px-4 py-3 text-sm text-white/80 text-center border-t border-white/5 ${className}`}>
+    <td className={`px-4 py-3 text-sm text-gray-600 text-center border-t border-gray-100 ${className}`}>
       {children}
     </td>
   )

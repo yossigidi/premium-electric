@@ -2,19 +2,14 @@ import { brands } from '../data/products'
 
 export default function Brands() {
   return (
-    <section id="brands" className="py-20 border-y border-white/5">
+    <section id="brands" className="py-16 border-y border-gray-100">
       <div className="container-luxe">
-        <div className="text-center mb-10">
-          <div className="text-xs tracking-[0.3em] uppercase text-gold-300">המותגים שאנחנו מייצגים</div>
+        <div className="text-center mb-8">
+          <div className="text-xs tracking-[0.3em] uppercase text-gold-500 font-semibold">המותגים שאנחנו מייצגים</div>
         </div>
-        <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6">
+        <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4">
           {brands.map((b) => (
-            <div
-              key={b}
-              className="font-display text-xl md:text-2xl text-white/40 hover:text-gold-300 transition-colors duration-500 cursor-default"
-            >
-              {b}
-            </div>
+            <div key={b} className="text-lg md:text-xl text-gray-300 hover:text-gold-500 transition-colors duration-300 cursor-default font-semibold">{b}</div>
           ))}
         </div>
       </div>

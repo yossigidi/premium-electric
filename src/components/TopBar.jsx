@@ -9,11 +9,11 @@ const items = [
 
 export default function TopBar() {
   return (
-    <div className="hidden md:block fixed top-0 inset-x-0 z-50 bg-ink-900 border-b border-gold-400/10 text-[11px] text-white/60">
+    <div className="hidden md:block fixed top-0 inset-x-0 z-50 bg-ink-900 text-[11px] text-white/80">
       <div className="container-luxe h-8 flex items-center justify-center gap-8 overflow-hidden">
         {items.map((it, i) => (
           <div key={i} className="flex items-center gap-2 shrink-0">
-            <it.icon size={12} className="text-gold-400" />
+            <it.icon size={12} className="text-gold-300" />
             <span>{it.text}</span>
           </div>
         ))}

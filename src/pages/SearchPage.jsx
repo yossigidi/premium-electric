@@ -96,24 +96,24 @@ export default function SearchPage() {
           <h1 className="section-title">
             חיפוש <span className="gold-text">מתקדם</span>
           </h1>
-          <p className="mt-3 text-white/60">מצאו את המוצר המושלם עם סינון חכם</p>
+          <p className="mt-3 text-gray-500">מצאו את המוצר המושלם עם סינון חכם</p>
         </div>
 
         {/* Search bar */}
         <div className="relative max-w-3xl mx-auto">
-          <Search className="absolute top-1/2 -translate-y-1/2 right-5 text-gold-400" size={20} />
+          <Search className="absolute top-1/2 -translate-y-1/2 right-5 text-gold-500" size={20} />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="חפש מוצר, מותג או תכונה..."
-            className="w-full bg-ink-800/70 border border-white/10 focus:border-gold-400 rounded-full py-4 pr-14 pl-14 text-white placeholder-white/40 outline-none transition"
+            className="w-full bg-gray-50 border border-gray-200 focus:border-gold-400 rounded-full py-4 pr-14 pl-14 text-gray-900 placeholder-gray-400 outline-none transition"
             autoFocus
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="absolute top-1/2 -translate-y-1/2 left-5 text-white/50 hover:text-white"
+              className="absolute top-1/2 -translate-y-1/2 left-5 text-gray-400 hover:text-gray-900"
             >
               <X size={18} />
             </button>
@@ -135,27 +135,27 @@ export default function SearchPage() {
                 <SlidersHorizontal size={16} /> סינון {activeCount > 0 && <span className="w-5 h-5 rounded-full bg-gold-400 text-ink-900 text-[10px] font-bold flex items-center justify-center">{activeCount}</span>}
               </button>
 
-              <div className="text-sm text-white/60">
-                נמצאו <span className="text-gold-300 font-bold">{filtered.length}</span> מוצרים
+              <div className="text-sm text-gray-500">
+                נמצאו <span className="text-gold-500 font-bold">{filtered.length}</span> מוצרים
               </div>
 
               <div className="relative">
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
-                  className="appearance-none bg-ink-800 border border-white/10 text-white pr-10 pl-4 py-2.5 rounded-full text-sm focus:border-gold-400 outline-none"
+                  className="appearance-none bg-gray-50 border border-gray-200 text-gray-900 pr-10 pl-4 py-2.5 rounded-full text-sm focus:border-gold-400 outline-none"
                 >
                   {sortOptions.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
                 </select>
-                <ArrowDownNarrowWide size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gold-400 pointer-events-none" />
+                <ArrowDownNarrowWide size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gold-500 pointer-events-none" />
               </div>
             </div>
 
             {filtered.length === 0 ? (
               <div className="py-20 text-center">
                 <div className="text-5xl mb-4">🔍</div>
-                <h3 className="font-display text-2xl text-white mb-2">לא נמצאו תוצאות</h3>
-                <p className="text-white/50 mb-6">נסו להרחיב את הסינון או לחפש מונח אחר</p>
+                <h3 className="font-display text-2xl text-gray-900 mb-2">לא נמצאו תוצאות</h3>
+                <p className="text-gray-400 mb-6">נסו להרחיב את הסינון או לחפש מונח אחר</p>
                 <button onClick={clearAll} className="btn-gold">נקה סינון</button>
               </div>
             ) : (
@@ -174,7 +174,7 @@ export default function SearchPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="lg:hidden fixed inset-0 z-[70] bg-ink-900/80 backdrop-blur-sm"
+            className="lg:hidden fixed inset-0 z-[70] bg-white/90 "
             onClick={() => setMobileFilters(false)}
           >
             <motion.div
@@ -183,11 +183,11 @@ export default function SearchPage() {
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25 }}
               onClick={(e) => e.stopPropagation()}
-              className="absolute inset-y-0 right-0 w-[88%] max-w-sm bg-ink-800 border-l border-white/10 overflow-y-auto"
+              className="absolute inset-y-0 right-0 w-[88%] max-w-sm bg-gray-50 border-l border-gray-200 overflow-y-auto"
             >
-              <div className="sticky top-0 bg-ink-800 border-b border-white/10 p-5 flex items-center justify-between">
-                <h3 className="font-display text-xl font-bold text-white">סינון</h3>
-                <button onClick={() => setMobileFilters(false)} className="p-2 text-white/60 hover:text-white">
+              <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-5 flex items-center justify-between">
+                <h3 className="font-display text-xl font-bold text-gray-900">סינון</h3>
+                <button onClick={() => setMobileFilters(false)} className="p-2 text-gray-500 hover:text-gray-900">
                   <X size={22} />
                 </button>
               </div>
@@ -212,7 +212,7 @@ function Filters({ cats, toggleCat, brandSel, toggleBrand, priceMax, setPriceMax
       {activeCount > 0 && (
         <button
           onClick={clearAll}
-          className="text-sm text-gold-300 hover:text-gold-200 flex items-center gap-2"
+          className="text-sm text-gold-500 hover:text-gold-200 flex items-center gap-2"
         >
           <X size={14} /> נקה הכל ({activeCount})
         </button>
@@ -227,8 +227,8 @@ function Filters({ cats, toggleCat, brandSel, toggleBrand, priceMax, setPriceMax
 
       {/* Price */}
       <FilterBlock title="טווח מחירים">
-        <div className="text-sm text-white/70 mb-3">
-          עד <span className="text-gold-300 font-bold">₪{fmt(priceMax)}</span>
+        <div className="text-sm text-gray-500 mb-3">
+          עד <span className="text-gold-500 font-bold">₪{fmt(priceMax)}</span>
         </div>
         <input
           type="range"
@@ -239,7 +239,7 @@ function Filters({ cats, toggleCat, brandSel, toggleBrand, priceMax, setPriceMax
           onChange={(e) => setPriceMax(Number(e.target.value))}
           className="w-full accent-gold-400"
         />
-        <div className="flex justify-between text-xs text-white/40 mt-1">
+        <div className="flex justify-between text-xs text-gray-400 mt-1">
           <span>₪0</span>
           <span>₪{fmt(PRICE_BOUNDS[1])}</span>
         </div>
@@ -262,14 +262,14 @@ function Filters({ cats, toggleCat, brandSel, toggleBrand, priceMax, setPriceMax
               key={r}
               onClick={() => setMinRating(r)}
               className={`flex items-center gap-2 w-full text-right px-3 py-2 rounded-lg transition ${
-                minRating === r ? 'bg-gold-400/10 text-gold-300' : 'text-white/70 hover:bg-white/5'
+                minRating === r ? 'bg-gold-400/10 text-gold-500' : 'text-gray-500 hover:bg-gray-50'
               }`}
             >
               {r > 0 ? (
                 <>
                   <div className="flex">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} size={13} className={i < Math.floor(r) ? 'fill-gold-400 text-gold-400' : 'text-white/20'} />
+                      <Star key={i} size={13} className={i < Math.floor(r) ? 'fill-gold-400 text-gold-500' : 'text-white/20'} />
                     ))}
                   </div>
                   <span className="text-sm">{r}+ ומעלה</span>
@@ -307,7 +307,7 @@ function Checkbox({ checked, onChange, label }) {
         {checked && <Check size={13} className="text-ink-900" strokeWidth={3} />}
       </div>
       <input type="checkbox" checked={checked} onChange={onChange} className="sr-only" />
-      <span className="text-sm text-white/70 group-hover:text-white transition-colors">{label}</span>
+      <span className="text-sm text-gray-500 group-hover:text-white transition-colors">{label}</span>
     </label>
   )
 }

@@ -21,21 +21,21 @@ export default function CompareBar() {
           transition={{ type: 'spring', damping: 24 }}
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[55] w-[92%] max-w-4xl"
         >
-          <div className="bg-ink-800/95 backdrop-blur-xl border border-gold-400/30 rounded-2xl shadow-luxe p-4 flex items-center gap-4">
+          <div className="bg-white/95  border border-gold-200 rounded-2xl shadow-luxe p-4 flex items-center gap-4">
             <div className="flex items-center gap-2 shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-300">
+              <div className="w-10 h-10 rounded-xl bg-gold-400/10 border border-gold-200 flex items-center justify-center text-gold-500">
                 <Scale size={18} />
               </div>
               <div className="hidden sm:block">
-                <div className="text-xs text-white/50">בהשוואה</div>
-                <div className="text-sm font-bold text-white">{items.length} / {max} מוצרים</div>
+                <div className="text-xs text-gray-400">בהשוואה</div>
+                <div className="text-sm font-bold text-gray-900">{items.length} / {max} מוצרים</div>
               </div>
             </div>
 
             <div className="flex-1 flex items-center gap-2 overflow-x-auto scrollbar-hide">
               {items.map((p) => (
                 <div key={p.id} className="relative shrink-0">
-                  <img src={p.image} alt={p.name} className="w-12 h-12 rounded-lg object-cover border border-white/10" />
+                  <img src={p.image} alt={p.name} className="w-12 h-12 rounded-lg object-cover border border-gray-200" />
                   <button
                     onClick={() => remove(p.id)}
                     className="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center hover:scale-110 transition"
@@ -46,14 +46,14 @@ export default function CompareBar() {
                 </div>
               ))}
               {Array.from({ length: max - items.length }).map((_, i) => (
-                <div key={i} className="w-12 h-12 rounded-lg border-2 border-dashed border-white/10 shrink-0" />
+                <div key={i} className="w-12 h-12 rounded-lg border-2 border-dashed border-gray-200 shrink-0" />
               ))}
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={clear}
-                className="hidden sm:inline-flex text-xs text-white/50 hover:text-white px-3 py-2"
+                className="hidden sm:inline-flex text-xs text-gray-400 hover:text-white px-3 py-2"
               >
                 נקה
               </button>

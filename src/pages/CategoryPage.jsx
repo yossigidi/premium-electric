@@ -50,12 +50,12 @@ export default function CategoryPage({ catId }) {
 
         <div className="container-luxe relative h-full flex flex-col justify-end pb-12">
           {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-sm text-white/60 mb-4">
-            <Link to="/" className="hover:text-gold-300 inline-flex items-center gap-1">
+          <nav className="flex items-center gap-2 text-sm text-white/70 mb-4">
+            <Link to="/" className="hover:text-gold-500 inline-flex items-center gap-1">
               <Home size={14} /> דף הבית
             </Link>
-            <ChevronLeft size={14} className="text-white/30" />
-            <span className="text-white/80">{category.name}</span>
+            <ChevronLeft size={14} className="text-white/50" />
+            <span className="text-white/90">{category.name}</span>
           </nav>
 
           <motion.div
@@ -63,7 +63,7 @@ export default function CategoryPage({ catId }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="text-xs tracking-[0.3em] uppercase text-gold-300 mb-3">{category.tagline}</div>
+            <div className="text-xs tracking-[0.3em] uppercase text-gold-500 mb-3">{category.tagline}</div>
             <h1 className="font-display text-5xl md:text-6xl font-bold text-white mb-3">{category.name}</h1>
             <p className="text-white/70 text-lg max-w-2xl">{category.description}</p>
           </motion.div>
@@ -72,30 +72,30 @@ export default function CategoryPage({ catId }) {
 
       {/* Results bar + sort */}
       <div className="container-luxe mt-10">
-        <div className="flex items-center justify-between gap-4 flex-wrap mb-8 pb-4 border-b border-white/5">
+        <div className="flex items-center justify-between gap-4 flex-wrap mb-8 pb-4 border-b border-gray-100">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-300">
+            <div className="w-10 h-10 rounded-xl bg-gold-400/10 border border-gold-200 flex items-center justify-center text-gold-500">
               <Package size={18} />
             </div>
             <div>
-              <div className="text-sm text-white/50">סה"כ</div>
-              <div className="text-xl font-bold text-white">
+              <div className="text-sm text-gray-400">סה"כ</div>
+              <div className="text-xl font-bold text-gray-900">
                 <span className="gold-text">{list.length}</span> מוצרים בקטגוריה
               </div>
             </div>
           </div>
 
           <div className="relative">
-            <label className="text-xs text-white/40 mb-1 block">מיון לפי</label>
+            <label className="text-xs text-gray-400 mb-1 block">מיון לפי</label>
             <div className="relative">
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="appearance-none bg-ink-800 border border-white/10 text-white pr-10 pl-4 py-2.5 rounded-full text-sm focus:border-gold-400 outline-none cursor-pointer"
+                className="appearance-none bg-gray-50 border border-gray-200 text-gray-900 pr-10 pl-4 py-2.5 rounded-full text-sm focus:border-gold-400 outline-none cursor-pointer"
               >
                 {sortOptions.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
               </select>
-              <ArrowDownNarrowWide size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gold-400 pointer-events-none" />
+              <ArrowDownNarrowWide size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gold-500 pointer-events-none" />
             </div>
           </div>
         </div>
@@ -104,8 +104,8 @@ export default function CategoryPage({ catId }) {
         {list.length === 0 ? (
           <div className="py-20 text-center">
             <div className="text-5xl mb-4">📦</div>
-            <h3 className="font-display text-2xl text-white mb-2">אין מוצרים בקטגוריה זו כרגע</h3>
-            <p className="text-white/50 mb-6">מוצרים חדשים מתווספים בקרוב</p>
+            <h3 className="font-display text-2xl text-gray-900 mb-2">אין מוצרים בקטגוריה זו כרגע</h3>
+            <p className="text-gray-400 mb-6">מוצרים חדשים מתווספים בקרוב</p>
             <Link to="/" className="btn-gold">חזרה לחנות</Link>
           </div>
         ) : (

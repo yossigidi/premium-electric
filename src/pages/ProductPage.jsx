@@ -65,14 +65,14 @@ function ProductPageContent({ product }) {
     <div className="pt-24 md:pt-32 lg:pt-44 pb-32 lg:pb-20 min-h-screen">
       {/* Breadcrumbs */}
       <div className="container-luxe py-6">
-        <nav className="flex items-center gap-2 text-sm text-white/50 flex-wrap">
-          <Link to="/" className="hover:text-gold-300 inline-flex items-center gap-1">
+        <nav className="flex items-center gap-2 text-sm text-gray-400 flex-wrap">
+          <Link to="/" className="hover:text-gold-500 inline-flex items-center gap-1">
             <Home size={14} /> דף הבית
           </Link>
-          <ChevronLeft size={14} className="text-white/30" />
-          <Link to={`/category/${category?.id}`} className="hover:text-gold-300">{category?.name}</Link>
-          <ChevronLeft size={14} className="text-white/30" />
-          <span className="text-white/80 truncate">{product.name}</span>
+          <ChevronLeft size={14} className="text-gray-300" />
+          <Link to={`/category/${category?.id}`} className="hover:text-gold-500">{category?.name}</Link>
+          <ChevronLeft size={14} className="text-gray-300" />
+          <span className="text-gray-600 truncate">{product.name}</span>
         </nav>
       </div>
 
@@ -84,7 +84,7 @@ function ProductPageContent({ product }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="relative rounded-3xl overflow-hidden border border-white/10 bg-ink-800/50 shadow-luxe"
+            className="relative rounded-3xl overflow-hidden border border-gray-200 bg-gray-50 shadow-luxe"
           >
             <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
               {product.badge && (
@@ -99,10 +99,10 @@ function ProductPageContent({ product }) {
               )}
             </div>
             <div className="absolute top-4 left-4 z-10 flex gap-2">
-              <button className="w-10 h-10 rounded-full bg-ink-900/80 backdrop-blur border border-white/10 text-white/70 hover:text-red-400 hover:border-red-400/40 transition flex items-center justify-center">
+              <button className="w-10 h-10 rounded-full bg-white/90 backdrop-blur border border-gray-200 text-gray-500 hover:text-red-400 hover:border-red-400/40 transition flex items-center justify-center">
                 <Heart size={16} />
               </button>
-              <button className="w-10 h-10 rounded-full bg-ink-900/80 backdrop-blur border border-white/10 text-white/70 hover:text-gold-300 hover:border-gold-400/40 transition flex items-center justify-center">
+              <button className="w-10 h-10 rounded-full bg-white/90 backdrop-blur border border-gray-200 text-gray-500 hover:text-gold-500 hover:border-gold-400/40 transition flex items-center justify-center">
                 <Share2 size={16} />
               </button>
               <button
@@ -111,7 +111,7 @@ function ProductPageContent({ product }) {
                 className={`w-10 h-10 rounded-full backdrop-blur border flex items-center justify-center transition ${
                   inCompare(product.id)
                     ? 'bg-gold-400 border-gold-400 text-ink-900'
-                    : 'bg-ink-900/80 border-white/10 text-white/70 hover:text-gold-300 hover:border-gold-400/40'
+                    : 'bg-white/90 border-gray-200 text-gray-500 hover:text-gold-500 hover:border-gold-400/40'
                 }`}
               >
                 <Scale size={16} />
@@ -139,7 +139,7 @@ function ProductPageContent({ product }) {
                 className={`relative aspect-square rounded-xl overflow-hidden border-2 bg-gradient-to-br from-white to-neutral-100 transition-all duration-300 ${
                   activeImage === i
                     ? 'border-gold-400 shadow-gold-glow'
-                    : 'border-white/5 opacity-60 hover:opacity-100 hover:border-white/20'
+                    : 'border-gray-100 opacity-60 hover:opacity-100 hover:border-white/20'
                 }`}
               >
                 <img src={img} alt="" className="w-full h-full object-contain p-2" />
@@ -151,12 +151,12 @@ function ProductPageContent({ product }) {
         {/* Info */}
         <div className="lg:col-span-5">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs tracking-[0.25em] uppercase text-gold-300">{product.brand}</span>
-            <span className="text-white/30">•</span>
-            <span className="text-xs text-white/50">מק"ט: {product.sku}</span>
+            <span className="text-xs tracking-[0.25em] uppercase text-gold-500">{product.brand}</span>
+            <span className="text-gray-300">•</span>
+            <span className="text-xs text-gray-400">מק"ט: {product.sku}</span>
           </div>
 
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-white leading-tight">
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
             {product.name}
           </h1>
 
@@ -167,18 +167,18 @@ function ProductPageContent({ product }) {
                 <Star
                   key={i}
                   size={16}
-                  className={i < Math.floor(product.rating) ? 'fill-gold-400 text-gold-400' : 'text-white/20'}
+                  className={i < Math.floor(product.rating) ? 'fill-gold-400 text-gold-500' : 'text-gray-200'}
                 />
               ))}
-              <span className="text-white font-semibold mr-2">{product.rating}</span>
+              <span className="text-gray-900 font-semibold mr-2">{product.rating}</span>
             </div>
-            <span className="text-white/50 text-sm">({product.reviews} ביקורות)</span>
-            <span className="text-white/30">•</span>
-            <button className="text-gold-300 text-sm hover:underline">כתוב ביקורת</button>
+            <span className="text-gray-400 text-sm">({product.reviews} ביקורות)</span>
+            <span className="text-gray-300">•</span>
+            <button className="text-gold-500 text-sm hover:underline">כתוב ביקורת</button>
           </div>
 
           {/* Short description */}
-          <p className="mt-5 text-white/70 leading-relaxed">{product.shortDescription}</p>
+          <p className="mt-5 text-gray-500 leading-relaxed">{product.shortDescription}</p>
 
           <div className="hair-divider my-6" />
 
@@ -190,7 +190,7 @@ function ProductPageContent({ product }) {
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   במלאי — זמין למשלוח מיידי
                 </span>
-                <span className="text-white/50 text-xs">נותרו {product.stockCount} יחידות</span>
+                <span className="text-gray-400 text-xs">נותרו {product.stockCount} יחידות</span>
               </>
             ) : (
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold">
@@ -200,11 +200,11 @@ function ProductPageContent({ product }) {
           </div>
 
           {/* Price block */}
-          <div className="p-6 rounded-2xl bg-ink-800/70 border border-gold-400/20">
+          <div className="p-6 rounded-2xl bg-gray-50 border border-gold-200">
             <div className="flex items-end justify-between flex-wrap gap-3">
               <div>
                 {product.oldPrice && (
-                  <div className="text-sm text-white/40 line-through mb-1">
+                  <div className="text-sm text-gray-400 line-through mb-1">
                     מחיר קודם: ₪{fmt(product.oldPrice)}
                   </div>
                 )}
@@ -218,13 +218,13 @@ function ProductPageContent({ product }) {
                 )}
               </div>
               <div className="text-left">
-                <div className="text-xs text-white/50">או עד {installments} תשלומים של</div>
-                <div className="text-xl font-bold text-white">₪{fmt(perMonth)}</div>
-                <div className="text-xs text-white/40">ללא ריבית</div>
+                <div className="text-xs text-gray-400">או עד {installments} תשלומים של</div>
+                <div className="text-xl font-bold text-gray-900">₪{fmt(perMonth)}</div>
+                <div className="text-xs text-gray-400">ללא ריבית</div>
               </div>
             </div>
 
-            <div className="mt-5 flex items-center gap-3 text-xs text-white/50">
+            <div className="mt-5 flex items-center gap-3 text-xs text-gray-400">
               <CreditCard size={14} />
               <span>המחיר נכון ל-{new Date().toLocaleDateString('he-IL')} · כולל מע"מ</span>
             </div>
@@ -232,15 +232,15 @@ function ProductPageContent({ product }) {
 
           {/* Quantity + CTA */}
           <div className="mt-6 flex items-center gap-3">
-            <div className="flex items-center bg-ink-800 border border-white/10 rounded-full">
+            <div className="flex items-center bg-gray-50 border border-gray-200 rounded-full">
               <button
                 onClick={() => setQty(Math.max(1, qty - 1))}
-                className="w-11 h-11 text-white/70 hover:text-gold-300 font-bold text-lg"
+                className="w-11 h-11 text-gray-500 hover:text-gold-500 font-bold text-lg"
               >−</button>
-              <div className="w-10 text-center font-bold text-white">{qty}</div>
+              <div className="w-10 text-center font-bold text-gray-900">{qty}</div>
               <button
                 onClick={() => setQty(qty + 1)}
-                className="w-11 h-11 text-white/70 hover:text-gold-300 font-bold text-lg"
+                className="w-11 h-11 text-gray-500 hover:text-gold-500 font-bold text-lg"
               >+</button>
             </div>
             <button onClick={handleAdd} className="btn-gold flex-1 justify-center">
@@ -261,29 +261,29 @@ function ProductPageContent({ product }) {
               { icon: BadgeCheck,  title: 'מחיר מובטח', sub: 'נשווה לכל מחיר' },
               { icon: Award,       title: 'מקורי 100%', sub: 'יבוא רשמי' },
             ].map((b, i) => (
-              <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-ink-800/40 border border-white/5">
-                <div className="w-9 h-9 rounded-lg bg-gold-400/10 border border-gold-400/20 flex items-center justify-center text-gold-300 shrink-0">
+              <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                <div className="w-9 h-9 rounded-lg bg-gold-400/10 border border-gold-200 flex items-center justify-center text-gold-500 shrink-0">
                   <b.icon size={16} />
                 </div>
                 <div className="min-w-0">
                   <div className="text-xs font-semibold text-white truncate">{b.title}</div>
-                  <div className="text-[10px] text-white/40">{b.sub}</div>
+                  <div className="text-[10px] text-gray-400">{b.sub}</div>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Concierge */}
-          <div className="mt-5 p-4 rounded-xl bg-gold-400/5 border border-gold-400/20 flex items-center gap-4">
-            <Sparkles className="text-gold-300 shrink-0" size={20} />
+          <div className="mt-5 p-4 rounded-xl bg-gold-400/5 border border-gold-200 flex items-center gap-4">
+            <Sparkles className="text-gold-500 shrink-0" size={20} />
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold text-white">צריכים ייעוץ אישי?</div>
-              <div className="text-xs text-white/60">יועץ פרטי ידבר איתכם על הצרכים שלכם</div>
+              <div className="text-sm font-semibold text-gray-900">צריכים ייעוץ אישי?</div>
+              <div className="text-xs text-gray-500">יועץ פרטי ידבר איתכם על הצרכים שלכם</div>
             </div>
             <button className="p-2.5 rounded-full bg-gold-400 text-ink-900 hover:scale-105 transition" aria-label="WhatsApp">
               <MessageCircle size={16} />
             </button>
-            <button className="p-2.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition" aria-label="טלפון">
+            <button className="p-2.5 rounded-full bg-gray-100 text-white hover:bg-white/20 transition" aria-label="טלפון">
               <Phone size={16} />
             </button>
           </div>
@@ -292,13 +292,13 @@ function ProductPageContent({ product }) {
 
       {/* Tabs */}
       <div className="container-luxe mt-20">
-        <div className="flex gap-2 border-b border-white/10 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-2 border-b border-gray-200 overflow-x-auto scrollbar-hide">
           {tabs.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`relative whitespace-nowrap px-6 py-4 text-sm font-semibold transition-colors ${
-                tab === t.id ? 'text-gold-300' : 'text-white/50 hover:text-white/80'
+                tab === t.id ? 'text-gold-500' : 'text-gray-400 hover:text-gray-600'
               }`}
             >
               {t.label}
@@ -338,10 +338,10 @@ function ProductPageContent({ product }) {
       )}
 
       {/* Sticky mobile cart bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-ink-900/95 backdrop-blur-xl border-t border-gold-400/20 p-4">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95  border-t border-gold-200 p-4">
         <div className="flex items-center gap-3">
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-white/50 truncate">{product.name}</div>
+            <div className="text-xs text-gray-400 truncate">{product.name}</div>
             <div className="text-xl font-bold gold-text">₪{fmt(product.price)}</div>
           </div>
           <button onClick={handleAdd} className="btn-gold">
@@ -366,14 +366,14 @@ function DescriptionTab({ product }) {
       <div className="space-y-4">
         <h3 className="font-display text-2xl font-bold text-white mb-2">תכונות עיקריות</h3>
         {product.features.map((f, i) => (
-          <div key={i} className="p-4 rounded-xl bg-ink-800/50 border border-white/5">
+          <div key={i} className="p-4 rounded-xl bg-gray-50 border border-gray-100">
             <div className="flex items-center gap-3 mb-1">
               <div className="w-8 h-8 rounded-lg bg-gold-gradient flex items-center justify-center text-ink-900">
                 <Check size={14} strokeWidth={3} />
               </div>
-              <div className="font-semibold text-white">{f.title}</div>
+              <div className="font-semibold text-gray-900">{f.title}</div>
             </div>
-            <div className="text-sm text-white/60 mr-11">{f.text || f.value}</div>
+            <div className="text-sm text-gray-500 mr-11">{f.text || f.value}</div>
           </div>
         ))}
       </div>
@@ -386,17 +386,17 @@ function SpecsTab({ product }) {
     <div className="max-w-4xl space-y-8">
       {Object.entries(product.specs).map(([section, rows]) => (
         <div key={section}>
-          <h3 className="font-display text-2xl font-bold text-gold-300 mb-4">{section}</h3>
-          <div className="rounded-2xl border border-white/10 overflow-hidden">
+          <h3 className="font-display text-2xl font-bold text-gold-500 mb-4">{section}</h3>
+          <div className="rounded-2xl border border-gray-200 overflow-hidden">
             {rows.map((r, i) => (
               <div
                 key={r.label}
                 className={`flex justify-between gap-6 px-6 py-4 ${
-                  i % 2 === 0 ? 'bg-ink-800/60' : 'bg-ink-700/40'
+                  i % 2 === 0 ? 'bg-gray-50' : 'bg-gray-50'
                 }`}
               >
-                <div className="text-white/60">{r.label}</div>
-                <div className="text-white font-semibold text-left">{r.value}</div>
+                <div className="text-gray-500">{r.label}</div>
+                <div className="text-gray-900 font-semibold text-left">{r.value}</div>
               </div>
             ))}
           </div>
@@ -410,19 +410,19 @@ function DimensionsTab({ product }) {
   return (
     <div className="grid md:grid-cols-2 gap-10 max-w-5xl">
       <div>
-        <h3 className="font-display text-2xl font-bold text-gold-300 mb-5 flex items-center gap-3">
+        <h3 className="font-display text-2xl font-bold text-gold-500 mb-5 flex items-center gap-3">
           <Package size={22} /> מידות ומשקל
         </h3>
-        <div className="rounded-2xl border border-white/10 overflow-hidden">
+        <div className="rounded-2xl border border-gray-200 overflow-hidden">
           {Object.entries(product.dimensions).map(([k, v], i) => (
             <div
               key={k}
               className={`flex justify-between px-6 py-4 ${
-                i % 2 === 0 ? 'bg-ink-800/60' : 'bg-ink-700/40'
+                i % 2 === 0 ? 'bg-gray-50' : 'bg-gray-50'
               }`}
             >
-              <div className="text-white/60">{k}</div>
-              <div className="text-white font-semibold">{v}</div>
+              <div className="text-gray-500">{k}</div>
+              <div className="text-gray-900 font-semibold">{v}</div>
             </div>
           ))}
         </div>
@@ -430,13 +430,13 @@ function DimensionsTab({ product }) {
 
       <div className="relative flex items-center justify-center">
         <div className="absolute inset-0 bg-gold-400/10 blur-3xl rounded-full" />
-        <div className="relative p-10 rounded-3xl bg-ink-800/40 border border-gold-400/20 text-center">
+        <div className="relative p-10 rounded-3xl bg-gray-50 border border-gold-200 text-center">
           <div className="font-display text-6xl font-bold gold-text mb-2">
             {product.dimensions['משקל'] || product.dimensions['משקל עם מעמד']}
           </div>
-          <div className="text-white/60">משקל כולל</div>
+          <div className="text-gray-500">משקל כולל</div>
           <div className="hair-divider my-6" />
-          <div className="text-sm text-white/50 leading-relaxed">
+          <div className="text-sm text-gray-400 leading-relaxed">
             כל מוצר נשלח באריזה מקורית עם הגנה מלאה.<br />
             התקנה מקצועית כלולה במחיר.
           </div>
@@ -449,24 +449,24 @@ function DimensionsTab({ product }) {
 function WarrantyTab({ product }) {
   return (
     <div className="max-w-4xl">
-      <div className="flex items-start gap-6 p-8 rounded-3xl bg-gradient-to-br from-gold-400/10 to-transparent border border-gold-400/20">
+      <div className="flex items-start gap-6 p-8 rounded-3xl bg-gradient-to-br from-gold-400/10 to-transparent border border-gold-200">
         <div className="w-20 h-20 rounded-2xl bg-gold-gradient flex items-center justify-center text-ink-900 shrink-0">
           <ShieldCheck size={36} />
         </div>
         <div>
-          <div className="text-xs tracking-widest uppercase text-gold-300 mb-1">תקופת אחריות</div>
-          <div className="font-display text-4xl font-bold text-white">{product.warranty.period}</div>
+          <div className="text-xs tracking-widest uppercase text-gold-500 mb-1">תקופת אחריות</div>
+          <div className="font-display text-4xl font-bold text-gray-900">{product.warranty.period}</div>
           <p className="mt-4 text-white/75 leading-relaxed text-lg">{product.warranty.details}</p>
         </div>
       </div>
 
       <div className="mt-10 grid md:grid-cols-2 gap-4">
         {product.warranty.includes.map((item, i) => (
-          <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-ink-800/50 border border-white/5">
+          <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 border border-gray-100">
             <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center shrink-0">
               <Check size={14} strokeWidth={3} />
             </div>
-            <div className="text-white">{item}</div>
+            <div className="text-gray-900">{item}</div>
           </div>
         ))}
       </div>
@@ -483,13 +483,13 @@ function ServiceTab({ product }) {
   return (
     <div className="max-w-4xl space-y-5">
       {items.map((it, i) => (
-        <div key={i} className="flex gap-5 p-6 rounded-2xl bg-ink-800/50 border border-white/5 hover:border-gold-400/30 transition">
-          <div className="w-14 h-14 rounded-2xl bg-gold-400/10 border border-gold-400/20 flex items-center justify-center text-gold-300 shrink-0">
+        <div key={i} className="flex gap-5 p-6 rounded-2xl bg-gray-50 border border-gray-100 hover:border-gold-200 transition">
+          <div className="w-14 h-14 rounded-2xl bg-gold-400/10 border border-gold-200 flex items-center justify-center text-gold-500 shrink-0">
             <it.icon size={22} />
           </div>
           <div>
             <div className="font-display text-xl font-bold text-white mb-2">{it.title}</div>
-            <div className="text-white/70 leading-relaxed">{it.text}</div>
+            <div className="text-gray-500 leading-relaxed">{it.text}</div>
           </div>
         </div>
       ))}
@@ -509,19 +509,19 @@ function QATab() {
   return (
     <div className="max-w-3xl space-y-3">
       {qas.map((item, i) => (
-        <div key={i} className="rounded-2xl border border-white/10 bg-ink-800/40 overflow-hidden">
+        <div key={i} className="rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
           <button
             onClick={() => setOpen(open === i ? -1 : i)}
             className="w-full flex items-center justify-between gap-4 px-6 py-5 text-right"
           >
-            <span className="font-semibold text-white">{item.q}</span>
+            <span className="font-semibold text-gray-900">{item.q}</span>
             <ChevronDown
               size={20}
-              className={`text-gold-300 transition-transform ${open === i ? 'rotate-180' : ''}`}
+              className={`text-gold-500 transition-transform ${open === i ? 'rotate-180' : ''}`}
             />
           </button>
           {open === i && (
-            <div className="px-6 pb-5 text-white/70 leading-relaxed">{item.a}</div>
+            <div className="px-6 pb-5 text-gray-500 leading-relaxed">{item.a}</div>
           )}
         </div>
       ))}
