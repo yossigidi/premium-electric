@@ -46,6 +46,7 @@ export default function Footer() {
             <a href="#" className="hover:text-gold-300">תנאי שימוש</a>
             <a href="#" className="hover:text-gold-300">פרטיות</a>
             <a href="#" className="hover:text-gold-300">נגישות</a>
+            <a href="#/admin" className="hover:text-gold-300">ניהול</a>
           </div>
         </div>
       </div>

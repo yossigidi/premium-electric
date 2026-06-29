@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion'
-import { ArrowLeft, Sparkles, ShieldCheck, Truck } from 'lucide-react'
+import { ArrowLeft, Sparkles, ShieldCheck, Truck, Wand2 } from 'lucide-react'
+import { useRouter } from '../router'
 
 export default function Hero() {
+  const { navigate } = useRouter()
   return (
     <section id="top" className="relative min-h-[85vh] flex items-center overflow-hidden pt-20 md:pt-28 lg:pt-36 bg-ink-900">
       <div className="absolute inset-0">
@@ -26,8 +28,12 @@ export default function Hero() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}
           className="mt-8 flex flex-wrap gap-4">
-          <a href="#categories" className="btn-gold">גלו את הקולקציה <ArrowLeft size={18} /></a>
-          <a href="#/search" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-white border border-white/20 hover:border-white/40 transition">חיפוש מתקדם</a>
+          <button onClick={() => navigate('/builder')} className="btn-gold">
+            <Wand2 size={18} /> בנה חבילה חכמה וחסוך 10%
+          </button>
+          <a href="#categories" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-white border border-white/20 hover:border-white/40 transition">
+            גלו את הקולקציה <ArrowLeft size={18} />
+          </a>
         </motion.div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.5 }}

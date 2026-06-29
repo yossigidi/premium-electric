@@ -14,15 +14,22 @@ import ProductPage from './pages/ProductPage'
 import SearchPage from './pages/SearchPage'
 import ComparePage from './pages/ComparePage'
 import CategoryPage from './pages/CategoryPage'
+import PackageBuilderPage from './pages/PackageBuilderPage'
+import AdminPage from './pages/admin/AdminPage'
 
 function Shell() {
   const { route } = useRouter()
+
+  // Admin panel is a standalone surface — no public navbar/footer/chat.
+  if (route.name === 'admin') return <AdminPage />
+
   return (
     <div className="relative">
       <TopBar />
       <Navbar />
       <main>
         {route.name === 'home'     && <HomePage />}
+        {route.name === 'builder'  && <PackageBuilderPage />}
         {route.name === 'product'  && <ProductPage id={route.id} />}
         {route.name === 'category' && <CategoryPage key={route.catId} catId={route.catId} />}
         {route.name === 'search'   && <SearchPage />}

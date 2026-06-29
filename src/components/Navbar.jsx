@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   Search, ShoppingBag, User, Menu, X, Heart,
   Tv, Music2, Laptop, Snowflake, Flame, ChefHat, Droplets, Wind, Bot,
-  ChevronLeft,
+  ChevronLeft, Wand2,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useRouter } from '../router'
@@ -65,6 +65,10 @@ export default function Navbar() {
               {l.label}
             </button>
           ))}
+          <button onClick={() => navigate('/builder')}
+            className="inline-flex items-center gap-1.5 rounded-full bg-gold-gradient px-4 py-1.5 text-sm font-semibold text-white transition-all duration-200 hover:shadow-gold-glow cursor-pointer">
+            <Wand2 size={15} /> בונה חבילה חכם
+          </button>
         </nav>
 
         <div className="flex items-center gap-1 shrink-0">
@@ -109,6 +113,10 @@ export default function Navbar() {
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             className="lg:hidden overflow-hidden bg-white border-t border-gray-100 shadow-lg">
             <div className="container-luxe py-5">
+              <button onClick={() => { navigate('/builder'); setOpen(false) }}
+                className="mb-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gold-gradient py-3 font-semibold text-white">
+                <Wand2 size={17} /> בונה חבילה חכם
+              </button>
               <div className="text-[10px] tracking-[0.2em] uppercase text-gold-500 mb-3">קטגוריות</div>
               <div className="grid grid-cols-2 gap-2 mb-5">
                 {allCategories.map((c) => {

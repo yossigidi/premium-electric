@@ -75,3 +75,38 @@ body.a11y-cursor, body.a11y-cursor * { cursor: url("data:image/svg+xml;utf8,<svg
     @apply bg-ink-900 text-white;
   }
 }
+
+/* ============ Package builder range slider ============ */
+.builder-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 9999px;
+  outline: none;
+}
+.builder-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 3px solid #b8922a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.builder-range::-webkit-slider-thumb:hover { transform: scale(1.12); }
+.builder-range::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 3px solid #b8922a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.builder-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid #c9a227;
+  outline-offset: 2px;
+}
