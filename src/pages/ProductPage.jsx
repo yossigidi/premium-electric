@@ -195,7 +195,7 @@ function ProductPageContent({ product }) {
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   במלאי — זמין למשלוח מיידי
                 </span>
-                <span className="text-gray-400 text-xs">נותרו {product.stockCount} יחידות</span>
+                {product.stockCount > 0 && <span className="text-gray-400 text-xs">נותרו {product.stockCount} יחידות</span>}
               </>
             ) : (
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold">
