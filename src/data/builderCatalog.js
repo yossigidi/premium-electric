@@ -35,7 +35,7 @@ export const TIER_IDS = BRAND_TIERS.map((t) => t.id)
 const BRAND_TIER = {
   // יוקרה — luxury / exclusive
   miele: 'luxury', gaggenau: 'luxury', liebherr: 'luxury', 'v-zug': 'luxury',
-  'bang & olufsen': 'luxury', devialet: 'luxury', 'sub-zero': 'luxury',
+  'bang & olufsen': 'luxury', devialet: 'luxury', 'sub-zero': 'luxury', asko: 'luxury',
   // מעוצב — design statement
   smeg: 'designed',
   // פרימיום — leading premium-popular

@@ -3,6 +3,11 @@ import { Save, Trash2, Loader2, Check, ChevronDown, ChevronRight, Upload, Link2 
 import { applianceTypes, BRAND_TIERS } from '../../data/builderCatalog'
 import { singlePrice, formatNis } from '../../utils/pricing'
 
+// A URL that points at a web PAGE rather than a direct image file (no image
+// extension, not a data URL) — i.e. something to "pull images from", not show.
+const looksLikePageUrl = (s) =>
+  /^https?:\/\//i.test(s || '') && !/\.(jpe?g|png|webp|gif|avif|svg)(\?|$)/i.test(s) && !String(s).startsWith('data:')
+
 // Resize an uploaded image to a compact JPEG data URL so it can be stored
 // inline without bloating the DB. Keeps the longest edge ≤ maxDim.
 function resizeImageToDataUrl(file, maxDim = 900, quality = 0.82) {
@@ -68,12 +73,18 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
 
   const [candidates, setCandidates] = useState({}) // id -> [url] fetched, awaiting pick
 
-  // The product's gallery (edited value, falling back to the single image).
+  // The product's gallery. Falls back to the single image — but only if it's an
+  // actual image (a leftover product-PAGE URL is surfaced in the input instead).
   const galleryOf = (p) => {
     const imgs = valueOf(p, 'images')
     if (Array.isArray(imgs) && imgs.length) return imgs
     const single = valueOf(p, 'image')
-    return single ? [single] : []
+    return single && !looksLikePageUrl(single) ? [single] : []
+  }
+  // A stored value that's a webpage link (not a real image) → offer to pull from it.
+  const pageUrlOf = (p) => {
+    const single = valueOf(p, 'image')
+    return (!valueOf(p, 'images')?.length && looksLikePageUrl(single)) ? single : ''
   }
   // Set the gallery; keep `image` (cards) synced to the first entry.
   const setGallery = (id, arr) => {
@@ -223,7 +234,7 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
                                   <input
                                     dir="ltr"
                                     placeholder="קישור לתמונה או לדף המוצר…"
-                                    value={imgDraft[p.id] || ''}
+                                    value={imgDraft[p.id] !== undefined ? imgDraft[p.id] : pageUrlOf(p)}
                                     onChange={(e) => setImgDraft((d) => ({ ...d, [p.id]: e.target.value }))}
                                     className={`${panelInput} flex-1`}
                                   />

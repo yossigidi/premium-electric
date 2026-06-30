@@ -31,7 +31,7 @@ Each product has these fields (omit a field only if truly absent from the source
 - brand (string)
 - model (string)
 - category — one of: refrigerators, ovens, cooktops, washers, dryers, dishwashers, robot-vacuums, tv, audio, computers
-- brandTier — one of: base, designed, luxury, premium. Infer from the brand: value brands (Electra, Beko, TCL, Hisense, Lenovo) = base; Smeg = designed; exclusive brands (Miele, Gaggenau, Liebherr, Sub-Zero) = luxury; leading brands (Samsung, LG, Bosch, Sony, Apple, Sonos) = premium.
+- brandTier — one of: base, designed, luxury, premium. Infer from the brand: value brands (Electra, Beko, TCL, Hisense, Lenovo) = base; Smeg = designed; exclusive brands (Miele, Gaggenau, Liebherr, Sub-Zero, ASKO, V-ZUG) = luxury; leading brands (Samsung, LG, Bosch, Sony, Apple, Sonos) = premium.
 - price (number, NIS), oldPrice (number, NIS)
 - image — a direct URL (http/https) to the main product image, if one appears in the source (e.g. an <img> src or an image-column value). Omit it if the source has no usable image URL; never invent one.
 - shortDescription (string) — one or two sentences for cards
