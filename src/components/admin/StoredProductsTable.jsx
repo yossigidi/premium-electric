@@ -212,9 +212,10 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
                           {(() => {
                             const imgs = galleryOf(p)
                             const cands = (candidates[p.id] || []).filter((c) => !imgs.includes(c))
+                            const draft = (imgDraft[p.id] !== undefined ? imgDraft[p.id] : pageUrlOf(p)).trim()
                             return (
                               <div>
-                                <span className="mb-1 block text-xs font-semibold text-gray-500">גלריית תמונות — העלה קבצים, הדבק קישור, או משוך מדף מוצר</span>
+                                <span className="mb-1 block text-xs font-semibold text-gray-500">גלריית תמונות — העלה קבצים מהמחשב, הדבק קישור ישיר לתמונה, או משוך מדף מוצר</span>
 
                                 {/* Current gallery: first = primary */}
                                 {imgs.length > 0 && (
@@ -233,13 +234,16 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
                                 <div className="flex flex-wrap items-center gap-2">
                                   <input
                                     dir="ltr"
-                                    placeholder="קישור לתמונה או לדף המוצר…"
+                                    placeholder="קישור ישיר לתמונה, או קישור לדף המוצר…"
                                     value={imgDraft[p.id] !== undefined ? imgDraft[p.id] : pageUrlOf(p)}
                                     onChange={(e) => setImgDraft((d) => ({ ...d, [p.id]: e.target.value }))}
                                     className={`${panelInput} flex-1`}
                                   />
-                                  <button type="button" onClick={() => { const u = (imgDraft[p.id] || '').trim(); if (/\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(u)) { setGallery(p.id, [...imgs, u]); setImgDraft((d) => ({ ...d, [p.id]: '' })) } else { fetchImagesFromPage(p.id, u) } }} disabled={imgBusy === p.id} className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 hover:border-gold-300 hover:text-gold-600 disabled:opacity-50">
-                                    {imgBusy === p.id ? <Loader2 size={14} className="animate-spin" /> : <Link2 size={14} />} הוסף / משוך מדף
+                                  <button type="button" onClick={() => { if (draft) { setGallery(p.id, [...imgs, draft]); setImgDraft((d) => ({ ...d, [p.id]: '' })); setImgMsg((m) => ({ ...m, [p.id]: 'נוסף קישור ✓' })) } }} disabled={!draft} title="הוסף את הקישור כתמונה ישירה" className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 hover:border-gold-300 hover:text-gold-600 disabled:opacity-50">
+                                    הוסף קישור
+                                  </button>
+                                  <button type="button" onClick={() => fetchImagesFromPage(p.id, draft)} disabled={imgBusy === p.id} title="נסה למשוך את התמונות מדף המוצר (לא עובד באתרים שחוסמים)" className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 hover:border-gold-300 hover:text-gold-600 disabled:opacity-50">
+                                    {imgBusy === p.id ? <Loader2 size={14} className="animate-spin" /> : <Link2 size={14} />} משוך מדף
                                   </button>
                                   <label className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 hover:border-gold-300 hover:text-gold-600">
                                     <Upload size={14} /> העלה

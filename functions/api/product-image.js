@@ -41,11 +41,18 @@ export async function onRequestGet({ request }) {
   const url = new URL(request.url).searchParams.get('url')
   if (!url || !/^https?:\/\//i.test(url)) return json({ error: 'bad_url', message: 'הדבק קישור תקין (http/https) לדף המוצר.' }, 400)
   try {
+    let origin = ''
+    try { origin = new URL(url).origin } catch { /* ignore */ }
     const r = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
         'Accept-Language': 'he-IL,he;q=0.9,en;q=0.8',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Upgrade-Insecure-Requests': '1',
+        ...(origin ? { Referer: origin + '/' } : {}),
       },
     })
     if (r.status === 403 || r.status === 401) {
