@@ -107,6 +107,12 @@ export function normalizeProduct(rec = {}) {
 
   const price = parsePrice(get('price'))
   const zapLow = parsePrice(get('zapLow'))
+  // Rich fields (from AI extraction; absent for flat CSV rows).
+  const description = Array.isArray(rec.description) ? rec.description.map(String) : []
+  const features = Array.isArray(rec.features) ? rec.features : []
+  const specs = rec.specs && typeof rec.specs === 'object' && !Array.isArray(rec.specs) ? rec.specs : {}
+  const sd = get('shortDescription')
+  const shortDescription = (Array.isArray(sd) ? '' : String(sd || '').trim()) || description[0] || ''
   return {
     name: String(get('name') || '').trim(),
     brand: String(get('brand') || '').trim(),
@@ -119,7 +125,11 @@ export function normalizeProduct(rec = {}) {
     oldPrice: parsePrice(get('oldPrice')),
     image: String(get('image') || '').trim(),
     tags: parseTags(get('tags')),
-    shortDescription: String(get('shortDescription') || '').trim(),
+    shortDescription,
+    description,
+    features,
+    specs,
+    warranty: String(rec.warranty || '').trim(),
   }
 }
 

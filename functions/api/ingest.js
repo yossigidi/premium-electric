@@ -22,14 +22,24 @@ const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' }
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: JSON_HEADERS })
 
-const EXTRACTION_SYSTEM = `You extract electrical-appliance products from the input into structured JSON.
+const EXTRACTION_SYSTEM = `You extract electrical-appliance products from the input into rich, structured JSON.
 Return ONLY a JSON object of the form {"products": [...]} with no surrounding text or markdown.
-Each product has these fields (omit unknowns):
-name (string, Hebrew if the source is Hebrew), brand, model, category, brandTier, price (number, NIS),
-oldPrice (number), image (url), tags (array of short strings), shortDescription (string).
-category must be one of: refrigerators, ovens, cooktops, washers, dryers, dishwashers, robot-vacuums, tv, audio, computers.
-brandTier must be one of: base, designed, luxury, premium. Infer it from the brand: value brands (Electra, Beko, TCL, Hisense, Lenovo) = base; Smeg = designed; exclusive brands (Miele, Gaggenau, Liebherr, Sub-Zero) = luxury; leading brands (Samsung, LG, Bosch, Sony, Apple, Sonos) = premium.
-Do not invent products that are not in the source. Do not add commentary.`
+Write all human-readable text in Hebrew when the source is Hebrew. Each product has these fields (omit a field only if truly absent from the source):
+
+- name (string)
+- brand (string)
+- model (string)
+- category — one of: refrigerators, ovens, cooktops, washers, dryers, dishwashers, robot-vacuums, tv, audio, computers
+- brandTier — one of: base, designed, luxury, premium. Infer from the brand: value brands (Electra, Beko, TCL, Hisense, Lenovo) = base; Smeg = designed; exclusive brands (Miele, Gaggenau, Liebherr, Sub-Zero) = luxury; leading brands (Samsung, LG, Bosch, Sony, Apple, Sonos) = premium.
+- price (number, NIS), oldPrice (number, NIS)
+- shortDescription (string) — one or two sentences for cards
+- description — array of 1-3 paragraph strings: the full marketing/product description
+- tags — array of short feature strings (e.g. "NoFrost", "700 ליטר", "A++", "4K")
+- features — array of { "title": string, "text": string } objects: the key highlighted features, each a short title + one-sentence explanation
+- specs — an object mapping a Hebrew category name (e.g. "תצוגה", "ביצועים", "מידות", "חיבורים", "צריכת אנרגיה") to an array of { "label": string, "value": string } rows. Capture EVERY technical detail you find in the source as a label/value row under the right category.
+- warranty (string) — warranty terms if stated
+
+Extract as much real detail as the source contains — the goal is a complete product page. Do NOT invent specs that are not in the source. Do not add commentary.`
 
 async function extractWithClaude(env, userContent) {
   const apiKey = env.ANTHROPIC_API_KEY

@@ -21,8 +21,12 @@ CREATE TABLE IF NOT EXISTS products (
   old_price        REAL,                        -- struck-through "was" price (NIS)
   zap_low          REAL,                        -- market-low baseline; defaults to price
   image            TEXT    DEFAULT '',
-  tags             TEXT    DEFAULT '[]',        -- JSON array of short strings
+  tags             TEXT    DEFAULT '[]',        -- JSON array of short feature strings
   short_description TEXT   DEFAULT '',
+  description      TEXT    DEFAULT '[]',         -- JSON array of paragraph strings
+  features         TEXT    DEFAULT '[]',         -- JSON array of { title, text }
+  specs            TEXT    DEFAULT '{}',         -- JSON object: category -> [{ label, value }]
+  warranty         TEXT    DEFAULT '',
   in_stock         INTEGER DEFAULT 1,           -- 0/1 boolean
   source           TEXT    DEFAULT 'admin',     -- where it was ingested from
   created_at       TEXT    DEFAULT (datetime('now'))
