@@ -1,7 +1,30 @@
 import { useState, Fragment } from 'react'
-import { Save, Trash2, Loader2, Check, ChevronDown, ChevronRight } from 'lucide-react'
+import { Save, Trash2, Loader2, Check, ChevronDown, ChevronRight, Upload } from 'lucide-react'
 import { applianceTypes, BRAND_TIERS } from '../../data/builderCatalog'
 import { singlePrice, formatNis } from '../../utils/pricing'
+
+// Resize an uploaded image to a compact JPEG data URL so it can be stored
+// inline without bloating the DB. Keeps the longest edge ≤ maxDim.
+function resizeImageToDataUrl(file, maxDim = 900, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file)
+    const img = new Image()
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      const scale = Math.min(1, maxDim / Math.max(img.width, img.height))
+      const w = Math.round(img.width * scale)
+      const h = Math.round(img.height * scale)
+      const canvas = document.createElement('canvas')
+      canvas.width = w; canvas.height = h
+      const ctx = canvas.getContext('2d')
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h) // flatten transparency to white
+      ctx.drawImage(img, 0, 0, w, h)
+      resolve(canvas.toDataURL('image/jpeg', quality))
+    }
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('bad image')) }
+    img.src = url
+  })
+}
 
 const cellInput =
   'w-full rounded-lg border border-transparent bg-transparent px-2 py-1.5 text-sm text-gray-800 text-right ' +
@@ -39,6 +62,15 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
 
   const numField = (id, field) => (e) =>
     setField(id, field, e.target.value === '' ? undefined : Number(e.target.value))
+
+  const uploadImage = async (id, file) => {
+    if (!file) return
+    try {
+      setField(id, 'image', await resizeImageToDataUrl(file))
+    } catch {
+      /* ignore unreadable image */
+    }
+  }
 
   const toggle = (id) => setOpen((p) => ({ ...p, [id]: !p[id] }))
 
@@ -129,23 +161,30 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
                       <div className="grid gap-4 lg:grid-cols-2">
                         {/* Editable text detail */}
                         <div className="space-y-3">
-                          <label className="block">
-                            <span className="mb-1 block text-xs font-semibold text-gray-500">תמונת מוצר (קישור URL)</span>
-                            <div className="flex items-center gap-3">
+                          <div>
+                            <span className="mb-1 block text-xs font-semibold text-gray-500">תמונת מוצר — העלה קובץ או הדבק קישור</span>
+                            <div className="flex items-center gap-2">
                               <input
                                 dir="ltr"
                                 placeholder="https://…"
-                                value={valueOf(p, 'image') || ''}
+                                value={(valueOf(p, 'image') || '').startsWith('data:') ? '' : (valueOf(p, 'image') || '')}
                                 onChange={(e) => setField(p.id, 'image', e.target.value)}
                                 className={`${panelInput} flex-1`}
                               />
+                              <label className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 transition-colors hover:border-gold-300 hover:text-gold-600">
+                                <Upload size={14} /> העלה
+                                <input type="file" accept="image/*" className="hidden" onChange={(e) => { uploadImage(p.id, e.target.files?.[0]); e.target.value = '' }} />
+                              </label>
                               {valueOf(p, 'image') ? (
                                 <img src={valueOf(p, 'image')} alt="" className="h-12 w-12 shrink-0 rounded-lg border border-gray-200 object-contain" />
                               ) : (
                                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-dashed border-gray-200 text-[10px] text-gray-400">אין</span>
                               )}
                             </div>
-                          </label>
+                            {(valueOf(p, 'image') || '').startsWith('data:') && (
+                              <span className="mt-1 block text-[11px] text-gray-400">תמונה שהועלתה מהמחשב ✓</span>
+                            )}
+                          </div>
                           <label className="block">
                             <span className="mb-1 block text-xs font-semibold text-gray-500">תיאור מלא (פסקה לכל שורה ריקה ביניהן)</span>
                             <textarea
