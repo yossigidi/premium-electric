@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { RouterProvider, useRouter } from './router'
 import { CompareProvider } from './contexts/CompareContext'
 import { AccessibilityProvider } from './contexts/AccessibilityContext'
+import { syncFromServer } from './utils/productStore'
 
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -46,6 +48,10 @@ function Shell() {
 }
 
 export default function App() {
+  // Hydrate the local product cache from the D1 database once on load, so the
+  // builder + storefront recommend from the live admin-managed catalog.
+  useEffect(() => { syncFromServer() }, [])
+
   return (
     <AccessibilityProvider>
       <CompareProvider>

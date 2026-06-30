@@ -1,19 +1,22 @@
 // ============================================================================
 // Product store — the admin-ingested products layer.
 //
-// Phase-2 stand-in for the Firestore `products` collection. The admin panel
-// saves reviewed/approved products here; the package builder reads them back
-// (see `candidatesFor` in data/builderCatalog.js) so ingested products flow
-// straight into recommendations — the end-to-end loop the plan calls for,
-// working fully offline until Firebase is wired in phase 3.
+// Source of truth is the Cloudflare D1 `products` table, reached through the
+// /api/products Pages Function. localStorage is a local CACHE of that table:
+//   • reads (getIngestedProducts) are synchronous off the cache, so the rest of
+//     the app — builderCatalog/candidatesFor, the storefront — never changes;
+//   • syncFromServer() hydrates the cache from D1 on app load;
+//   • writes (add/remove/clear) go to D1, then refresh the cache from the
+//     server's authoritative response and notify listeners.
 //
-// Persistence: localStorage (per-browser). Swapping this for Firestore later
-// means re-implementing the same five functions against the SDK — the rest of
-// the app only touches this module, never storage directly.
+// Offline fallback: when /api/products is unreachable (plain `vite dev` with no
+// wrangler/D1, or an outage) the writes degrade to cache-only so the admin keeps
+// working locally. In production on Cloudflare the D1 path is the one that runs.
 // ============================================================================
 
 const STORAGE_KEY = 'pe.admin.products.v1'
 const CHANGE_EVENT = 'pe:products-changed'
+const API = '/api/products'
 
 const isBrowser = typeof window !== 'undefined'
 
@@ -35,12 +38,38 @@ function write(products) {
   window.dispatchEvent(new CustomEvent(CHANGE_EVENT))
 }
 
-/** All ingested products currently in the store. */
+/** All ingested products currently in the cache (synchronous). */
 export function getIngestedProducts() {
   return read()
 }
 
-// Ingested ids live well above the seed/showroom range (1–199) to avoid clashes.
+// --- Server (D1) access -----------------------------------------------------
+// Each helper returns the authoritative product list on success, or null when
+// the API is unavailable so callers can fall back to the local cache.
+async function apiRequest(method, { body, query } = {}) {
+  if (!isBrowser) return null
+  try {
+    const res = await fetch(API + (query ? `?${query}` : ''), {
+      method,
+      headers: body ? { 'Content-Type': 'application/json' } : undefined,
+      body: body ? JSON.stringify(body) : undefined,
+    })
+    if (!res.ok) return null // 503 (no D1) / 5xx → fall back to local cache
+    const data = await res.json().catch(() => null)
+    return Array.isArray(data?.products) ? data.products : null
+  } catch {
+    return null // network error (e.g. no Functions in plain vite dev)
+  }
+}
+
+/** Pull the products from D1 into the local cache. Returns the list. */
+export async function syncFromServer() {
+  const products = await apiRequest('GET')
+  if (products) write(products)
+  return products ?? read()
+}
+
+// Cache-only id assignment, used for the offline fallback path.
 const ID_BASE = 1000
 function nextId(existing) {
   const max = existing.reduce((m, p) => Math.max(m, Number(p.id) || 0), ID_BASE - 1)
@@ -48,10 +77,15 @@ function nextId(existing) {
 }
 
 /**
- * Append products to the store, assigning ids where missing.
+ * Persist products (commits the admin's selected rows). Tries D1 first; on
+ * failure appends to the local cache so the admin keeps working offline.
  * Returns the full updated list.
  */
-export function addIngestedProducts(incoming = []) {
+export async function addIngestedProducts(incoming = []) {
+  const server = await apiRequest('POST', { body: { products: incoming } })
+  if (server) { write(server); return server }
+
+  // Offline fallback: stamp ids locally and append to the cache.
   const current = read()
   let id = nextId(current)
   const stamped = incoming.map((p) => ({
@@ -59,8 +93,6 @@ export function addIngestedProducts(incoming = []) {
     id: p.id ?? id++,
     source: p.source ?? 'admin',
     inStock: p.inStock ?? true,
-    // zapLow is the pricing baseline; fall back to the entered price until the
-    // phase-3 Zap lookup refines it.
     zapLow: p.zapLow ?? p.price,
   }))
   const next = [...current, ...stamped]
@@ -68,21 +100,25 @@ export function addIngestedProducts(incoming = []) {
   return next
 }
 
-/** Replace the entire store (used by the review-table "save all" flow). */
+/** Replace the local cache outright (no server round-trip). */
 export function setIngestedProducts(products = []) {
   write(products)
   return products
 }
 
-/** Remove a single product by id. Returns the updated list. */
-export function removeIngestedProduct(id) {
+/** Remove a single product by id (D1, with cache fallback). */
+export async function removeIngestedProduct(id) {
+  const server = await apiRequest('DELETE', { query: `id=${encodeURIComponent(id)}` })
+  if (server) { write(server); return server }
   const next = read().filter((p) => p.id !== id)
   write(next)
   return next
 }
 
-/** Wipe the store. */
-export function clearIngestedProducts() {
+/** Wipe the store (D1, with cache fallback). */
+export async function clearIngestedProducts() {
+  const server = await apiRequest('DELETE', { query: 'all=1' })
+  if (server) { write(server); return server }
   write([])
   return []
 }

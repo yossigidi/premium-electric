@@ -82,7 +82,6 @@ export default function BuilderProductCard({ item, index = 0 }) {
               <span>
                 ב-<span className="font-bold text-gold-600">₪{formatNis(item.upgrade.extraCost)}</span> יותר
                 {' '}תקבל את <span className="font-semibold">{item.upgrade.to.brand} {item.upgrade.to.name}</span>
-                {item.upgrade.crossesTier && ' — שדרוג רמת מותג'}
               </span>
             </div>
           )}

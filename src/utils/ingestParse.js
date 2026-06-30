@@ -60,18 +60,19 @@ export function normalizeCategory(raw) {
 
 // --- Tier normalization -----------------------------------------------------
 const TIER_HINTS = {
-  budget:   ['budget', 'תקציב', 'זול', 'בסיסי', 'low'],
-  designed: ['designed', 'design', 'מעוצב', 'בינוני', 'mid', 'premium-mid'],
-  premium:  ['premium', 'פרמיום', 'יוקרה', 'דגל', 'high', 'luxury'],
+  base:     ['base', 'בסיס', 'תקציב', 'זול', 'בסיסי', 'low', 'budget'],
+  designed: ['designed', 'מעוצב', 'design', 'smeg'],
+  luxury:   ['luxury', 'יוקרה', 'exclusive', 'miele', 'gaggenau', 'liebherr'],
+  premium:  ['premium', 'פרימיום', 'פרמיום', 'דגל', 'high', 'mid', 'בינוני', 'samsung', 'bosch', 'aeg'],
 }
 export function normalizeTier(raw) {
-  if (!raw) return 'designed' // sensible middle default
+  if (!raw) return 'base' // safe default when no tier given (admin can refine)
   const v = String(raw).trim().toLowerCase()
   if (TIER_IDS.includes(v)) return v
   for (const [id, hints] of Object.entries(TIER_HINTS)) {
     if (hints.some((h) => v.includes(h))) return id
   }
-  return 'designed'
+  return 'base'
 }
 
 // --- Price parsing: strip ₪, commas, spaces ---------------------------------

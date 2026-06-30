@@ -1,12 +1,12 @@
 import { BRAND_TIERS } from '../../data/builderCatalog'
 
 /**
- * Brand-tier preference — three chips (budget → designed → premium).
+ * Brand-style preference — four chips (בסיס / מעוצב / יוקרה / פרימיום).
  * Radio-group semantics for keyboard + screen-reader users.
  */
 export default function BrandTierSelect({ value, onChange }) {
   return (
-    <div role="radiogroup" aria-label="העדפת רמת מותג" className="grid grid-cols-3 gap-3">
+    <div role="radiogroup" aria-label="העדפת רמת מותג" className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {BRAND_TIERS.map((tier) => {
         const selected = value === tier.id
         const Icon = tier.Icon

@@ -7,10 +7,21 @@ import {
 import { parseDelimited, blankProduct, normalizeProduct } from '../../utils/ingestParse'
 
 const SOURCES = [
-  { id: 'csv', label: 'טבלה / CSV', Icon: Table2, hint: 'הדבק או העלה ייצוא אקסל' },
+  { id: 'csv', label: 'טבלה / Excel', Icon: Table2, hint: 'Excel · CSV · הדבקה' },
   { id: 'doc', label: 'מסמך', Icon: FileText, hint: 'PDF / Word / טקסט' },
   { id: 'url', label: 'קישור לאתר', Icon: Link2, hint: 'חילוץ מדף מוצר' },
 ]
+
+const isExcelFile = (name) => /\.(xlsx|xls)$/i.test(name)
+
+// Excel → CSV text, reusing the same header-mapping/normalization as CSV.
+// SheetJS is loaded lazily so it never weighs down the main storefront bundle.
+async function excelToCsv(file) {
+  const { read, utils } = await import('xlsx')
+  const wb = read(await file.arrayBuffer())
+  const sheet = wb.Sheets[wb.SheetNames[0]]
+  return sheet ? utils.sheet_to_csv(sheet) : ''
+}
 
 const SAMPLE_CSV =
   'שם,מותג,דגם,קטגוריה,רמה,מחיר,תמונה,מאפיינים,תיאור\n' +
@@ -53,6 +64,24 @@ export default function IngestPanel({ onProducts }) {
     if (!file) return
     reset()
     const name = file.name.toLowerCase()
+
+    // Excel workbook: convert the first sheet to CSV, then run the CSV pipeline.
+    if (isExcelFile(name)) {
+      setBusy(true)
+      try {
+        const csv = await excelToCsv(file)
+        const { products, rowCount, unmappedHeaders } = parseDelimited(csv)
+        if (!rowCount) { setError('הקובץ לא הכיל שורות תקינות. ודא ששורה ראשונה היא כותרות.'); return }
+        if (unmappedHeaders.length) setNote(`עמודות שלא זוהו (לא ייובאו): ${unmappedHeaders.join(', ')}`)
+        onProducts(products, { source: 'file-excel', count: rowCount })
+      } catch {
+        setError('קריאת קובץ ה-Excel נכשלה. נסה לשמור כ-CSV ולהעלות שוב.')
+      } finally {
+        setBusy(false)
+      }
+      return
+    }
+
     const isText = /\.(csv|tsv|txt)$/.test(name) || file.type.startsWith('text/')
 
     if (isText) {
@@ -160,7 +189,7 @@ export default function IngestPanel({ onProducts }) {
                 <ClipboardPaste size={16} /> קלוט מהטקסט
               </button>
               <button type="button" onClick={() => fileRef.current?.click()} className="btn-ghost !py-2.5 text-sm">
-                <UploadCloud size={16} /> העלה קובץ CSV
+                <UploadCloud size={16} /> העלה Excel / CSV
               </button>
               <button type="button" onClick={() => setText(SAMPLE_CSV)} className="text-xs text-gold-600 hover:underline">
                 טען דוגמה
@@ -213,7 +242,7 @@ export default function IngestPanel({ onProducts }) {
       <input
         ref={fileRef}
         type="file"
-        accept={source === 'csv' ? '.csv,.tsv,.txt,text/csv' : '.pdf,.doc,.docx,.txt'}
+        accept={source === 'csv' ? '.csv,.tsv,.txt,.xlsx,.xls,text/csv' : '.pdf,.doc,.docx,.txt'}
         className="hidden"
         onChange={(e) => { handleFile(e.target.files?.[0]); e.target.value = '' }}
       />

@@ -43,25 +43,30 @@ export default function AdminPage() {
     setDraft((prev) => prev.map((r) => ({ ...r, _selected: checked })))
   const removeRow = (i) => setDraft((prev) => prev.filter((_, idx) => idx !== i))
 
-  // --- Save selected & valid rows to the store ------------------------------
-  const handleSave = () => {
+  // --- Save selected & valid rows to the store (commits to D1) --------------
+  const isSavable = (r) =>
+    r._selected && r.name?.trim() && r.category && ((r.price > 0) || (r.zapLow > 0))
+
+  const handleSave = async () => {
+    const toSave = draft
+      .filter(isSavable)
+      // strip editor-only fields before persisting
+      .map(({ _key, _selected, ...p }) => p)
+    if (!toSave.length) return
     setSaving(true)
-    setTimeout(() => {
-      const toSave = draft
-        .filter((r) => r._selected && r.name?.trim() && r.category && ((r.price > 0) || (r.zapLow > 0)))
-        // strip editor-only fields before persisting
-        .map(({ _key, _selected, ...p }) => p)
-      addIngestedProducts(toSave)
+    try {
+      await addIngestedProducts(toSave)
       // drop the saved rows from the draft, keep any unsaved/invalid ones
-      setDraft((prev) => prev.filter((r) => !(r._selected && r.name?.trim() && r.category && ((r.price > 0) || (r.zapLow > 0)))))
+      setDraft((prev) => prev.filter((r) => !isSavable(r)))
       setSaved(toSave.length)
+    } finally {
       setSaving(false)
-    }, 450)
+    }
   }
 
-  const handleClearDb = () => {
+  const handleClearDb = async () => {
     if (window.confirm('למחוק את כל המוצרים שנקלטו? פעולה זו אינה הפיכה.')) {
-      clearIngestedProducts()
+      await clearIngestedProducts()
     }
   }
 

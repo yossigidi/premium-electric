@@ -1,0 +1,25 @@
+# ============================================================================
+# Cloudflare configuration for the Pages project + its D1 database binding.
+#
+# The Pages Functions under functions/api/ read `env.DB` (the D1 binding below).
+# After creating the database in Cloudflare, paste the real database_id here.
+#
+# One-time setup (see COPY-ME.txt for the full Hebrew walkthrough):
+#   1. wrangler d1 create premium-electric        → copy the database_id it prints
+#   2. paste that id into database_id below
+#   3. wrangler d1 execute premium-electric --remote --file=./schema.sql
+#   4. In Cloudflare Pages → Settings → Functions → D1 bindings, bind
+#      variable name DB → database "premium-electric" (so production sees it too).
+#
+# Local dev with the functions + a local D1:
+#   npx wrangler pages dev -- npm run dev      (or: wrangler pages dev dist)
+# ============================================================================
+
+name = "premium-electric"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"                      # available in functions as env.DB
+database_name = "premium-electric"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"

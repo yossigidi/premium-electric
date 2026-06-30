@@ -27,7 +27,7 @@ Return ONLY a JSON object: {"products": [...]}. Each product has these fields (o
 name (string, Hebrew if the source is Hebrew), brand, model, category, brandTier, price (number, NIS),
 oldPrice (number), image (url), tags (array of short strings), shortDescription (string).
 category must be one of: refrigerators, ovens, cooktops, washers, dryers, dishwashers, robot-vacuums, tv, audio, computers.
-brandTier must be one of: budget, designed, premium. Infer it from brand prestige and price when not stated.
+brandTier must be one of: base, designed, luxury, premium. Infer it from the brand: value brands (Electra, Beko, TCL, Hisense, Lenovo) = base; Smeg = designed; exclusive brands (Miele, Gaggenau, Liebherr, Sub-Zero) = luxury; leading brands (Samsung, LG, Bosch, Sony, Apple, Sonos) = premium.
 Do not invent products that are not in the text. Do not add commentary.`
 
 async function extractWithGroq(env, text) {

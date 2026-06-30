@@ -32,8 +32,7 @@ export default function PackageResults({ result }) {
               <span className="font-bold text-gold-600">טיפ שדרוג חכם:</span>{' '}
               בתוספת <span className="font-bold">₪{formatNis(headlineUpgrade.extraCost)}</span> בלבד תוכל לשדרג
               את ה{applianceLabel(headlineUpgrade.type)} ל-
-              <span className="font-semibold">{headlineUpgrade.to.brand} {headlineUpgrade.to.name}</span>
-              {headlineUpgrade.crossesTier && ' ולעלות רמת מותג שלמה'}.
+              <span className="font-semibold">{headlineUpgrade.to.brand} {headlineUpgrade.to.name}</span>.
             </div>
           </motion.div>
         )}

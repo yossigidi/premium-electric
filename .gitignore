@@ -13,3 +13,6 @@ yarn-error.log*
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# Local notes with credentials (code-server password, SSH key path, admin passcode) — never commit
+COPY-ME.txt
