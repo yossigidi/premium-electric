@@ -154,6 +154,15 @@ export default function IngestPanel({ onProducts }) {
     setError('סוג קובץ לא נתמך. נתמכים: PDF, Word (.docx), טקסט.')
   }
 
+  // Handle one or many files. Processed one after another (not truly parallel)
+  // to avoid API rate spikes and busy-state races; every file's products
+  // accumulate in the review draft.
+  const handleFiles = async (files) => {
+    if (!files.length) return
+    for (const file of files) await handleFile(file)
+    if (files.length > 1) setNote(`עובדו ${files.length} קבצים — המוצרים נוספו לסקירה.`)
+  }
+
   // --- Server extraction (document / URL) -----------------------------------
   const sendToServer = async (payload) => {
     setBusy(true)
@@ -255,7 +264,7 @@ export default function IngestPanel({ onProducts }) {
             className="flex w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50/60 px-6 py-12 text-center transition-colors hover:border-gold-300 hover:bg-gold-50/30 disabled:opacity-60"
           >
             {busy ? <Loader2 size={28} className="animate-spin text-gold-500" /> : <UploadCloud size={28} className="text-gold-500" />}
-            <span className="text-sm font-bold text-gray-800">{busy ? 'מחלץ מוצרים…' : 'גרור או בחר קובץ PDF / Word / טקסט'}</span>
+            <span className="text-sm font-bold text-gray-800">{busy ? 'מחלץ מוצרים…' : 'גרור או בחר קבצים — PDF / Word / טקסט (אפשר כמה יחד)'}</span>
             <span className="max-w-xs text-xs text-gray-400">
               PDF נקרא ישירות ע"י Claude (גם סרוק). Word (.docx) ופורמט טקסט נתמכים גם הם.
             </span>
@@ -290,9 +299,10 @@ export default function IngestPanel({ onProducts }) {
       <input
         ref={fileRef}
         type="file"
+        multiple
         accept={source === 'csv' ? '.csv,.tsv,.txt,.xlsx,.xls,text/csv' : '.pdf,.doc,.docx,.txt'}
         className="hidden"
-        onChange={(e) => { handleFile(e.target.files?.[0]); e.target.value = '' }}
+        onChange={(e) => { handleFiles(Array.from(e.target.files || [])); e.target.value = '' }}
       />
 
       {/* Feedback */}

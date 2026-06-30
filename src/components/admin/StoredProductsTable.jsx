@@ -4,7 +4,7 @@ import { applianceTypes, BRAND_TIERS } from '../../data/builderCatalog'
 import { singlePrice, formatNis } from '../../utils/pricing'
 
 const cellInput =
-  'w-full rounded-lg border border-transparent bg-transparent px-2 py-1.5 text-sm text-gray-800 ' +
+  'w-full rounded-lg border border-transparent bg-transparent px-2 py-1.5 text-sm text-gray-800 text-right ' +
   'outline-none transition-colors hover:border-gray-200 focus:border-gold-400 focus:bg-white focus:ring-1 focus:ring-gold-400/40'
 const panelInput =
   'w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 outline-none focus:border-gold-400 focus:ring-1 focus:ring-gold-400/40'
