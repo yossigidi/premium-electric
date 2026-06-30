@@ -1,6 +1,7 @@
 // Curated luxury demo catalog with full product details.
 // Real product images from Israeli retailers (Ivory, Bug, Miele Israel) and manufacturer CDNs.
 // This mapping overrides the per-product `image` and `images` fields at the bottom of this file.
+import { getIngestedProducts } from '../utils/productStore'
 const PRODUCT_IMAGES = {
   // ===== Televisions =====
   1: [ // LG OLED G4 77" — LG US PDP Gallery (clean 730x730 product shots)
@@ -1934,6 +1935,53 @@ products.forEach((p) => {
   }
 });
 
-export const getProductById = (id) => products.find((p) => p.id === Number(id));
+// Make an admin-ingested product safe to render on the rich product page:
+// fill the fields the page reads (images, warranty object, dimensions, service)
+// from what the ingest captured, with sensible defaults.
+function hydrateForPage(p) {
+  const images = Array.isArray(p.images) && p.images.length ? p.images : (p.image ? [p.image] : [])
+  const description = Array.isArray(p.description) && p.description.length
+    ? p.description
+    : (p.shortDescription ? [p.shortDescription] : [])
+  const warranty = p.warranty && typeof p.warranty === 'object'
+    ? p.warranty
+    : { period: (typeof p.warranty === 'string' && p.warranty) ? p.warranty : 'אחריות יבואן רשמי', details: '', includes: [] }
+  // Derive a dimensions table from a "מידות" spec section if present.
+  let dimensions = (p.dimensions && typeof p.dimensions === 'object') ? p.dimensions : null
+  if (!dimensions) {
+    dimensions = {}
+    const dim = p.specs && (p.specs['מידות'] || p.specs['מידות ומשקל'] || p.specs['מידות ומשקל'])
+    if (Array.isArray(dim)) for (const r of dim) if (r?.label) dimensions[r.label] = r.value
+  }
+  const service = (p.service && typeof p.service === 'object') ? p.service : {
+    delivery: 'משלוח והתקנה חינם עד הבית.',
+    installation: 'התקנה מקצועית על ידי טכנאי מוסמך, כלולה במחיר.',
+    support: 'קו תמיכה ייעודי בעברית ושירות בבית.',
+  }
+  return {
+    ...p,
+    images,
+    description,
+    features: Array.isArray(p.features) ? p.features : [],
+    specs: (p.specs && typeof p.specs === 'object' && !Array.isArray(p.specs)) ? p.specs : {},
+    warranty,
+    dimensions,
+    service,
+    tags: Array.isArray(p.tags) ? p.tags : [],
+    rating: p.rating ?? 0,
+    reviews: p.reviews ?? 0,
+    sku: p.sku || p.model || '',
+    stockCount: p.stockCount ?? 0,
+    inStock: p.inStock !== false,
+  }
+}
+
+export const getProductById = (id) => {
+  const num = Number(id)
+  const showroom = products.find((p) => p.id === num)
+  if (showroom) return showroom
+  const ingested = getIngestedProducts().find((p) => p.id === num)
+  return ingested ? hydrateForPage(ingested) : undefined
+}
 export const getRelatedProducts = (product, limit = 3) =>
   products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, limit);

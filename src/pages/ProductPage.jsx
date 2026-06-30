@@ -9,10 +9,15 @@ import { getProductById, getRelatedProducts, categories } from '../data/products
 import { Link, useRouter } from '../router'
 import ProductCard from '../components/ProductCard'
 import { useCompare } from '../contexts/CompareContext'
+import { subscribeProducts } from '../utils/productStore'
 
 const fmt = (n) => new Intl.NumberFormat('he-IL').format(n)
 
 export default function ProductPage({ id }) {
+  // Re-render when the ingested-product cache hydrates from D1, so a direct link
+  // to an ingested product resolves once the background sync completes.
+  const [, bump] = useState(0)
+  useEffect(() => subscribeProducts(() => bump((n) => n + 1)), [])
   const product = getProductById(id)
   const { navigate } = useRouter()
 

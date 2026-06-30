@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { ArrowUpRight, Tag } from 'lucide-react'
 import { formatNis } from '../../utils/pricing'
 import { applianceLabel, BRAND_TIERS } from '../../data/builderCatalog'
+import { Link } from '../../router'
 
 const tierMeta = (id) => BRAND_TIERS.find((t) => t.id === id)
 
@@ -85,6 +86,13 @@ export default function BuilderProductCard({ item, index = 0 }) {
               </span>
             </div>
           )}
+
+          <Link
+            to={`/product/${item.id}`}
+            className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold text-gold-600 transition-colors hover:text-gold-700 hover:underline"
+          >
+            פרטים מלאים ומפרט <ArrowUpRight size={13} />
+          </Link>
         </div>
       </div>
     </motion.article>
