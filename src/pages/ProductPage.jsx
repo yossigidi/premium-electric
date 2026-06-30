@@ -23,7 +23,7 @@ export default function ProductPage({ id }) {
 
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white pt-32">
+      <div className="min-h-screen flex items-center justify-center text-gray-800 pt-32">
         <div className="text-center">
           <h1 className="text-4xl font-display mb-4">המוצר לא נמצא</h1>
           <Link to="/" className="btn-gold">חזרה לחנות</Link>
@@ -271,7 +271,7 @@ function ProductPageContent({ product }) {
                   <b.icon size={16} />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-xs font-semibold text-white truncate">{b.title}</div>
+                  <div className="text-xs font-semibold text-gray-900 truncate">{b.title}</div>
                   <div className="text-[10px] text-gray-400">{b.sub}</div>
                 </div>
               </div>
@@ -288,7 +288,7 @@ function ProductPageContent({ product }) {
             <button className="p-2.5 rounded-full bg-gold-400 text-ink-900 hover:scale-105 transition" aria-label="WhatsApp">
               <MessageCircle size={16} />
             </button>
-            <button className="p-2.5 rounded-full bg-gray-100 text-white hover:bg-white/20 transition" aria-label="טלפון">
+            <button className="p-2.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition" aria-label="טלפון">
               <Phone size={16} />
             </button>
           </div>
@@ -365,11 +365,11 @@ function DescriptionTab({ product }) {
     <div className="grid lg:grid-cols-3 gap-10">
       <div className="lg:col-span-2 space-y-5">
         {product.description.map((p, i) => (
-          <p key={i} className="text-white/75 leading-relaxed text-lg">{p}</p>
+          <p key={i} className="text-gray-600 leading-relaxed text-lg">{p}</p>
         ))}
       </div>
       <div className="space-y-4">
-        <h3 className="font-display text-2xl font-bold text-white mb-2">תכונות עיקריות</h3>
+        <h3 className="font-display text-2xl font-bold text-gray-900 mb-2">תכונות עיקריות</h3>
         {product.features.map((f, i) => (
           <div key={i} className="p-4 rounded-xl bg-gray-50 border border-gray-100">
             <div className="flex items-center gap-3 mb-1">
@@ -461,7 +461,7 @@ function WarrantyTab({ product }) {
         <div>
           <div className="text-xs tracking-widest uppercase text-gold-500 mb-1">תקופת אחריות</div>
           <div className="font-display text-4xl font-bold text-gray-900">{product.warranty.period}</div>
-          <p className="mt-4 text-white/75 leading-relaxed text-lg">{product.warranty.details}</p>
+          <p className="mt-4 text-gray-600 leading-relaxed text-lg">{product.warranty.details}</p>
         </div>
       </div>
 
@@ -493,7 +493,7 @@ function ServiceTab({ product }) {
             <it.icon size={22} />
           </div>
           <div>
-            <div className="font-display text-xl font-bold text-white mb-2">{it.title}</div>
+            <div className="font-display text-xl font-bold text-gray-900 mb-2">{it.title}</div>
             <div className="text-gray-500 leading-relaxed">{it.text}</div>
           </div>
         </div>
