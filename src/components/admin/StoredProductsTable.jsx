@@ -1,5 +1,5 @@
 import { useState, Fragment } from 'react'
-import { Save, Trash2, Loader2, Check, ChevronDown, ChevronRight, Upload } from 'lucide-react'
+import { Save, Trash2, Loader2, Check, ChevronDown, ChevronRight, Upload, Link2 } from 'lucide-react'
 import { applianceTypes, BRAND_TIERS } from '../../data/builderCatalog'
 import { singlePrice, formatNis } from '../../utils/pricing'
 
@@ -42,6 +42,9 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
   const [edits, setEdits] = useState({}) // id -> { field: value }
   const [busyId, setBusyId] = useState(null)
   const [open, setOpen] = useState({}) // id -> bool
+  const [imgBusy, setImgBusy] = useState(null) // id whose image is being fetched
+  const [imgMsg, setImgMsg] = useState({}) // id -> status message
+  const [imgDraft, setImgDraft] = useState({}) // id -> URL input buffer
 
   const valueOf = (p, field) =>
     edits[p.id]?.[field] !== undefined ? edits[p.id][field] : p[field]
@@ -63,12 +66,46 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
   const numField = (id, field) => (e) =>
     setField(id, field, e.target.value === '' ? undefined : Number(e.target.value))
 
-  const uploadImage = async (id, file) => {
-    if (!file) return
+  const [candidates, setCandidates] = useState({}) // id -> [url] fetched, awaiting pick
+
+  // The product's gallery (edited value, falling back to the single image).
+  const galleryOf = (p) => {
+    const imgs = valueOf(p, 'images')
+    if (Array.isArray(imgs) && imgs.length) return imgs
+    const single = valueOf(p, 'image')
+    return single ? [single] : []
+  }
+  // Set the gallery; keep `image` (cards) synced to the first entry.
+  const setGallery = (id, arr) => {
+    const clean = [...new Set(arr.filter((s) => typeof s === 'string' && s.trim()))]
+    setEdits((prev) => ({ ...prev, [id]: { ...prev[id], images: clean, image: clean[0] || '' } }))
+  }
+
+  const uploadImages = async (id, files, current) => {
+    const added = []
+    for (const f of files) { try { added.push(await resizeImageToDataUrl(f)) } catch { /* skip */ } }
+    if (added.length) { setGallery(id, [...current, ...added]); setImgMsg((m) => ({ ...m, [id]: `הועלו ${added.length} תמונות ✓` })) }
+  }
+
+  // Pull image candidates from a product-PAGE URL (og:image + page gallery).
+  const fetchImagesFromPage = async (id, pageUrl) => {
+    if (!pageUrl || !/^https?:\/\//i.test(pageUrl)) {
+      setImgMsg((m) => ({ ...m, [id]: 'הדבק תחילה קישור לדף המוצר.' })); return
+    }
+    setImgBusy(id); setImgMsg((m) => ({ ...m, [id]: '' }))
     try {
-      setField(id, 'image', await resizeImageToDataUrl(file))
+      const res = await fetch(`/api/product-image?url=${encodeURIComponent(pageUrl)}`)
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && Array.isArray(data.images) && data.images.length) {
+        setCandidates((c) => ({ ...c, [id]: data.images }))
+        setImgMsg((m) => ({ ...m, [id]: `נמצאו ${data.images.length} תמונות — בחר אילו להוסיף` }))
+      } else {
+        setImgMsg((m) => ({ ...m, [id]: data.message || 'לא נמצאו תמונות בדף.' }))
+      }
     } catch {
-      /* ignore unreadable image */
+      setImgMsg((m) => ({ ...m, [id]: 'שגיאת רשת במשיכת התמונה.' }))
+    } finally {
+      setImgBusy(null)
     }
   }
 
@@ -161,30 +198,64 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
                       <div className="grid gap-4 lg:grid-cols-2">
                         {/* Editable text detail */}
                         <div className="space-y-3">
-                          <div>
-                            <span className="mb-1 block text-xs font-semibold text-gray-500">תמונת מוצר — העלה קובץ או הדבק קישור</span>
-                            <div className="flex items-center gap-2">
-                              <input
-                                dir="ltr"
-                                placeholder="https://…"
-                                value={(valueOf(p, 'image') || '').startsWith('data:') ? '' : (valueOf(p, 'image') || '')}
-                                onChange={(e) => setField(p.id, 'image', e.target.value)}
-                                className={`${panelInput} flex-1`}
-                              />
-                              <label className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 transition-colors hover:border-gold-300 hover:text-gold-600">
-                                <Upload size={14} /> העלה
-                                <input type="file" accept="image/*" className="hidden" onChange={(e) => { uploadImage(p.id, e.target.files?.[0]); e.target.value = '' }} />
-                              </label>
-                              {valueOf(p, 'image') ? (
-                                <img src={valueOf(p, 'image')} alt="" className="h-12 w-12 shrink-0 rounded-lg border border-gray-200 object-contain" />
-                              ) : (
-                                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-dashed border-gray-200 text-[10px] text-gray-400">אין</span>
-                              )}
-                            </div>
-                            {(valueOf(p, 'image') || '').startsWith('data:') && (
-                              <span className="mt-1 block text-[11px] text-gray-400">תמונה שהועלתה מהמחשב ✓</span>
-                            )}
-                          </div>
+                          {(() => {
+                            const imgs = galleryOf(p)
+                            const cands = (candidates[p.id] || []).filter((c) => !imgs.includes(c))
+                            return (
+                              <div>
+                                <span className="mb-1 block text-xs font-semibold text-gray-500">גלריית תמונות — העלה קבצים, הדבק קישור, או משוך מדף מוצר</span>
+
+                                {/* Current gallery: first = primary */}
+                                {imgs.length > 0 && (
+                                  <div className="mb-2 flex flex-wrap gap-2">
+                                    {imgs.map((src, idx) => (
+                                      <div key={src} className="relative">
+                                        <img src={src} alt="" className="h-16 w-16 rounded-lg border border-gray-200 object-contain" />
+                                        {idx === 0 && <span className="absolute -top-1 right-0 rounded bg-gold-500 px-1 text-[9px] font-bold text-white">ראשי</span>}
+                                        <button type="button" onClick={() => setGallery(p.id, imgs.filter((_, i) => i !== idx))} aria-label="הסר תמונה" className="absolute -left-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white hover:bg-red-600">×</button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {/* Controls */}
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <input
+                                    dir="ltr"
+                                    placeholder="קישור לתמונה או לדף המוצר…"
+                                    value={imgDraft[p.id] || ''}
+                                    onChange={(e) => setImgDraft((d) => ({ ...d, [p.id]: e.target.value }))}
+                                    className={`${panelInput} flex-1`}
+                                  />
+                                  <button type="button" onClick={() => { const u = (imgDraft[p.id] || '').trim(); if (/\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(u)) { setGallery(p.id, [...imgs, u]); setImgDraft((d) => ({ ...d, [p.id]: '' })) } else { fetchImagesFromPage(p.id, u) } }} disabled={imgBusy === p.id} className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 hover:border-gold-300 hover:text-gold-600 disabled:opacity-50">
+                                    {imgBusy === p.id ? <Loader2 size={14} className="animate-spin" /> : <Link2 size={14} />} הוסף / משוך מדף
+                                  </button>
+                                  <label className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 hover:border-gold-300 hover:text-gold-600">
+                                    <Upload size={14} /> העלה
+                                    <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => { uploadImages(p.id, Array.from(e.target.files || []), imgs); e.target.value = '' }} />
+                                  </label>
+                                </div>
+                                {imgMsg[p.id] && <span className="mt-1 block text-[11px] text-gray-500">{imgMsg[p.id]}</span>}
+
+                                {/* Fetched candidates to pick from */}
+                                {cands.length > 0 && (
+                                  <div className="mt-2 rounded-lg border border-gray-100 bg-gray-50 p-2">
+                                    <div className="mb-1 flex items-center justify-between text-[11px] text-gray-500">
+                                      <span>תמונות שנמצאו בדף — לחץ להוספה:</span>
+                                      <button type="button" onClick={() => { setGallery(p.id, [...imgs, ...cands]); setCandidates((c) => ({ ...c, [p.id]: [] })) }} className="font-semibold text-gold-600 hover:underline">הוסף הכל</button>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                      {cands.map((src) => (
+                                        <button key={src} type="button" onClick={() => setGallery(p.id, [...imgs, src])} title="הוסף לגלריה" className="rounded-lg border border-gray-200 bg-white p-0.5 hover:border-gold-400">
+                                          <img src={src} alt="" className="h-14 w-14 object-contain" />
+                                        </button>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })()}
                           <label className="block">
                             <span className="mb-1 block text-xs font-semibold text-gray-500">תיאור מלא (פסקה לכל שורה ריקה ביניהן)</span>
                             <textarea

@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS products (
   price            REAL,                        -- catalog/list price (NIS)
   old_price        REAL,                        -- struck-through "was" price (NIS)
   zap_low          REAL,                        -- market-low baseline; defaults to price
-  image            TEXT    DEFAULT '',
+  image            TEXT    DEFAULT '',          -- primary image (cards) = images[0]
+  images           TEXT    DEFAULT '[]',         -- JSON array of gallery image URLs/data-URLs
   tags             TEXT    DEFAULT '[]',        -- JSON array of short feature strings
   short_description TEXT   DEFAULT '',
   description      TEXT    DEFAULT '[]',         -- JSON array of paragraph strings

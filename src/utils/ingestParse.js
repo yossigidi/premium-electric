@@ -113,6 +113,10 @@ export function normalizeProduct(rec = {}) {
   const specs = rec.specs && typeof rec.specs === 'object' && !Array.isArray(rec.specs) ? rec.specs : {}
   const sd = get('shortDescription')
   const shortDescription = (Array.isArray(sd) ? '' : String(sd || '').trim()) || description[0] || ''
+  const imgSingle = String(get('image') || '').trim()
+  const images = Array.isArray(rec.images)
+    ? rec.images.filter((s) => typeof s === 'string' && s.trim())
+    : (imgSingle ? [imgSingle] : [])
   return {
     name: String(get('name') || '').trim(),
     brand: String(get('brand') || '').trim(),
@@ -123,7 +127,8 @@ export function normalizeProduct(rec = {}) {
     // Pricing baseline defaults to the entered price until phase-3 Zap lookup.
     zapLow: zapLow ?? price,
     oldPrice: parsePrice(get('oldPrice')),
-    image: String(get('image') || '').trim(),
+    image: images[0] || imgSingle,
+    images,
     tags: parseTags(get('tags')),
     shortDescription,
     description,

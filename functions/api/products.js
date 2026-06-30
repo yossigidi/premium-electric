@@ -39,6 +39,7 @@ function rowToProduct(row) {
     oldPrice: row.old_price ?? undefined,
     zapLow: row.zap_low ?? row.price ?? undefined,
     image: row.image || '',
+    images: parseJson(row.images || '[]', []),  // gallery (URLs / data-URLs)
     tags: Array.isArray(tags) ? tags : [],
     shortDescription: row.short_description || '',
     description: parseJson(row.description || '[]', []),  // paragraph strings
@@ -57,6 +58,10 @@ function productToColumns(p) {
   const zapLow = Number.isFinite(Number(p.zapLow)) ? Number(p.zapLow) : price
   const arr = (v) => JSON.stringify(Array.isArray(v) ? v : [])
   const obj = (v) => JSON.stringify(v && typeof v === 'object' && !Array.isArray(v) ? v : {})
+  // Gallery is the source of truth; primary image (cards) is its first entry.
+  const gallery = (Array.isArray(p.images) && p.images.length ? p.images : (p.image ? [p.image] : []))
+    .filter((s) => typeof s === 'string' && s.trim())
+  const primary = gallery[0] || String(p.image || '')
   return [
     String(p.name || '').trim(),
     String(p.brand || ''),
@@ -66,7 +71,8 @@ function productToColumns(p) {
     price,
     Number.isFinite(Number(p.oldPrice)) ? Number(p.oldPrice) : null,
     zapLow,
-    String(p.image || ''),
+    primary,
+    JSON.stringify(gallery),
     arr(p.tags),
     String(p.shortDescription || ''),
     arr(p.description),
@@ -78,7 +84,7 @@ function productToColumns(p) {
   ]
 }
 
-const COLS = 'name, brand, model, category, brand_tier, price, old_price, zap_low, image, tags, short_description, description, features, specs, warranty, in_stock, source'
+const COLS = 'name, brand, model, category, brand_tier, price, old_price, zap_low, image, images, tags, short_description, description, features, specs, warranty, in_stock, source'
 const PLACEHOLDERS = COLS.split(',').map(() => '?').join(', ')
 const INSERT_SQL = `INSERT INTO products (${COLS}) VALUES (${PLACEHOLDERS})`
 
