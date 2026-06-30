@@ -130,6 +130,23 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
                         {/* Editable text detail */}
                         <div className="space-y-3">
                           <label className="block">
+                            <span className="mb-1 block text-xs font-semibold text-gray-500">תמונת מוצר (קישור URL)</span>
+                            <div className="flex items-center gap-3">
+                              <input
+                                dir="ltr"
+                                placeholder="https://…"
+                                value={valueOf(p, 'image') || ''}
+                                onChange={(e) => setField(p.id, 'image', e.target.value)}
+                                className={`${panelInput} flex-1`}
+                              />
+                              {valueOf(p, 'image') ? (
+                                <img src={valueOf(p, 'image')} alt="" className="h-12 w-12 shrink-0 rounded-lg border border-gray-200 object-contain" />
+                              ) : (
+                                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-dashed border-gray-200 text-[10px] text-gray-400">אין</span>
+                              )}
+                            </div>
+                          </label>
+                          <label className="block">
                             <span className="mb-1 block text-xs font-semibold text-gray-500">תיאור מלא (פסקה לכל שורה ריקה ביניהן)</span>
                             <textarea
                               rows={4}

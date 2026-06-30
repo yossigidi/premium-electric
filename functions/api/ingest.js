@@ -24,7 +24,8 @@ const json = (data, status = 200) =>
 
 const EXTRACTION_SYSTEM = `You extract electrical-appliance products from the input into rich, structured JSON.
 Return ONLY a JSON object of the form {"products": [...]} with no surrounding text or markdown.
-Write all human-readable text in Hebrew when the source is Hebrew. Each product has these fields (omit a field only if truly absent from the source):
+LANGUAGE: Write ALL human-readable text — name, shortDescription, description, feature titles/texts, spec section names, spec labels and values, tags, warranty — in fluent, natural Hebrew. If the source is in English (or any other language), TRANSLATE it accurately and naturally into Hebrew. Never output English prose. Keep as-is only: brand names, model numbers/SKUs, and standard technical tokens/units (e.g. "4K", "A++", "NoFrost", "Wi-Fi", 'ס"מ', "kg").
+Each product has these fields (omit a field only if truly absent from the source):
 
 - name (string)
 - brand (string)
@@ -32,6 +33,7 @@ Write all human-readable text in Hebrew when the source is Hebrew. Each product 
 - category — one of: refrigerators, ovens, cooktops, washers, dryers, dishwashers, robot-vacuums, tv, audio, computers
 - brandTier — one of: base, designed, luxury, premium. Infer from the brand: value brands (Electra, Beko, TCL, Hisense, Lenovo) = base; Smeg = designed; exclusive brands (Miele, Gaggenau, Liebherr, Sub-Zero) = luxury; leading brands (Samsung, LG, Bosch, Sony, Apple, Sonos) = premium.
 - price (number, NIS), oldPrice (number, NIS)
+- image — a direct URL (http/https) to the main product image, if one appears in the source (e.g. an <img> src or an image-column value). Omit it if the source has no usable image URL; never invent one.
 - shortDescription (string) — one or two sentences for cards
 - description — array of 1-3 paragraph strings: the full marketing/product description
 - tags — array of short feature strings (e.g. "NoFrost", "700 ליטר", "A++", "4K")
@@ -85,15 +87,24 @@ async function extractWithClaude(env, userContent) {
   return { products: Array.isArray(products) ? products : [] }
 }
 
-// Very small HTML → text reduction (no DOM in Workers runtime).
+// Very small HTML → text reduction (no DOM in Workers runtime). Image src URLs
+// are pulled out first and appended so the model can pick the product image.
 function htmlToText(html) {
-  return html
+  const imgs = []
+  const re = /<img\b[^>]*\bsrc\s*=\s*["']([^"']+)["']/gi
+  let m
+  while ((m = re.exec(html)) && imgs.length < 30) {
+    const src = m[1]
+    if (/^https?:\/\//i.test(src) && !/sprite|icon|logo|pixel|blank|spacer/i.test(src)) imgs.push(src)
+  }
+  const text = html
     .replace(/<script[\s\S]*?<\/script>/gi, ' ')
     .replace(/<style[\s\S]*?<\/style>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
     .replace(/&nbsp;/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
+  return imgs.length ? `${text}\n\nIMAGE CANDIDATES (pick the main product image for "image"):\n${imgs.join('\n')}` : text
 }
 
 // Build the Claude user-message content from whatever source the client sent.
