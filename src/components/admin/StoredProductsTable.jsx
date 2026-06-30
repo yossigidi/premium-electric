@@ -8,6 +8,19 @@ import { singlePrice, formatNis } from '../../utils/pricing'
 const looksLikePageUrl = (s) =>
   /^https?:\/\//i.test(s || '') && !/\.(jpe?g|png|webp|gif|avif|svg)(\?|$)/i.test(s) && !String(s).startsWith('data:')
 
+// Download an image THROUGH our server (bypasses page bot-blocks + hotlink
+// protection) and resize it to a compact data URL. Returns null if it can't.
+async function importImageFromUrl(url) {
+  try {
+    const res = await fetch(`/api/fetch-image?url=${encodeURIComponent(url)}`)
+    if (!res.ok) return null
+    if (!(res.headers.get('content-type') || '').startsWith('image/')) return null
+    return await resizeImageToDataUrl(await res.blob())
+  } catch {
+    return null
+  }
+}
+
 // Resize an uploaded image to a compact JPEG data URL so it can be stored
 // inline without bloating the DB. Keeps the longest edge ≤ maxDim.
 function resizeImageToDataUrl(file, maxDim = 900, quality = 0.82) {
@@ -96,6 +109,29 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
     const added = []
     for (const f of files) { try { added.push(await resizeImageToDataUrl(f)) } catch { /* skip */ } }
     if (added.length) { setGallery(id, [...current, ...added]); setImgMsg((m) => ({ ...m, [id]: `הועלו ${added.length} תמונות ✓` })) }
+  }
+
+  // Add an image from a URL: download it via the server and embed it (reliable);
+  // if that fails, fall back to storing the raw URL.
+  const addImageFromUrl = async (id, url, current) => {
+    if (!url) return
+    setImgBusy(id); setImgMsg((m) => ({ ...m, [id]: 'מוריד תמונה…' }))
+    const dataUrl = await importImageFromUrl(url)
+    if (dataUrl) {
+      setGallery(id, [...current, dataUrl]); setImgMsg((m) => ({ ...m, [id]: 'תמונה נוספה ✓' }))
+    } else {
+      setGallery(id, [...current, url]); setImgMsg((m) => ({ ...m, [id]: 'נוסף קישור. אם התמונה לא מוצגת — האתר חוסם; העלה קובץ במקום.' }))
+    }
+    setImgBusy(null)
+  }
+
+  const addManyFromUrls = async (id, urls, current) => {
+    setImgBusy(id); setImgMsg((m) => ({ ...m, [id]: `מוריד ${urls.length} תמונות…` }))
+    const acc = [...current]
+    for (const u of urls) { const d = await importImageFromUrl(u); acc.push(d || u) }
+    setGallery(id, acc); setCandidates((c) => ({ ...c, [id]: [] }))
+    setImgMsg((m) => ({ ...m, [id]: `נוספו ${urls.length} תמונות ✓` }))
+    setImgBusy(null)
   }
 
   // Pull image candidates from a product-PAGE URL (og:image + page gallery).
@@ -239,8 +275,8 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
                                     onChange={(e) => setImgDraft((d) => ({ ...d, [p.id]: e.target.value }))}
                                     className={`${panelInput} flex-1`}
                                   />
-                                  <button type="button" onClick={() => { if (draft) { setGallery(p.id, [...imgs, draft]); setImgDraft((d) => ({ ...d, [p.id]: '' })); setImgMsg((m) => ({ ...m, [p.id]: 'נוסף קישור ✓' })) } }} disabled={!draft} title="הוסף את הקישור כתמונה ישירה" className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 hover:border-gold-300 hover:text-gold-600 disabled:opacity-50">
-                                    הוסף קישור
+                                  <button type="button" onClick={async () => { if (draft) { await addImageFromUrl(p.id, draft, imgs); setImgDraft((d) => ({ ...d, [p.id]: '' })) } }} disabled={!draft || imgBusy === p.id} title="הורד את התמונה מהקישור והוסף לגלריה" className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 hover:border-gold-300 hover:text-gold-600 disabled:opacity-50">
+                                    {imgBusy === p.id ? <Loader2 size={14} className="animate-spin" /> : null} הוסף קישור
                                   </button>
                                   <button type="button" onClick={() => fetchImagesFromPage(p.id, draft)} disabled={imgBusy === p.id} title="נסה למשוך את התמונות מדף המוצר (לא עובד באתרים שחוסמים)" className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-600 hover:border-gold-300 hover:text-gold-600 disabled:opacity-50">
                                     {imgBusy === p.id ? <Loader2 size={14} className="animate-spin" /> : <Link2 size={14} />} משוך מדף
@@ -257,11 +293,11 @@ export default function StoredProductsTable({ products, onUpdate, onRemove }) {
                                   <div className="mt-2 rounded-lg border border-gray-100 bg-gray-50 p-2">
                                     <div className="mb-1 flex items-center justify-between text-[11px] text-gray-500">
                                       <span>תמונות שנמצאו בדף — לחץ להוספה:</span>
-                                      <button type="button" onClick={() => { setGallery(p.id, [...imgs, ...cands]); setCandidates((c) => ({ ...c, [p.id]: [] })) }} className="font-semibold text-gold-600 hover:underline">הוסף הכל</button>
+                                      <button type="button" onClick={() => addManyFromUrls(p.id, cands, imgs)} className="font-semibold text-gold-600 hover:underline">הוסף הכל</button>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                       {cands.map((src) => (
-                                        <button key={src} type="button" onClick={() => setGallery(p.id, [...imgs, src])} title="הוסף לגלריה" className="rounded-lg border border-gray-200 bg-white p-0.5 hover:border-gold-400">
+                                        <button key={src} type="button" onClick={() => { addImageFromUrl(p.id, src, imgs); setCandidates((c) => ({ ...c, [p.id]: (c[p.id] || []).filter((x) => x !== src) })) }} title="הוסף לגלריה" className="rounded-lg border border-gray-200 bg-white p-0.5 hover:border-gold-400">
                                           <img src={src} alt="" className="h-14 w-14 object-contain" />
                                         </button>
                                       ))}
