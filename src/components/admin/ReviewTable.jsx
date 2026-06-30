@@ -15,9 +15,12 @@ const cellInput =
  * ticked rows are saved to the product store.
  */
 export default function ReviewTable({ rows, onChange, onToggle, onToggleAll, onRemove, onSave, saving }) {
+  // Warnings are informational only — a product needs just a name to be saved;
+  // category/price can be filled in later from the "products in DB" editor.
   const validity = useMemo(() => rows.map((r) => validateProduct(r)), [rows])
   const selectedCount = rows.filter((r) => r._selected).length
-  const savableCount = rows.filter((r, i) => r._selected && validity[i].length === 0).length
+  const savableCount = rows.filter((r) => r._selected && r.name?.trim()).length
+  const incompleteCount = rows.filter((r, i) => r._selected && r.name?.trim() && validity[i].length > 0).length
   const allSelected = rows.length > 0 && selectedCount === rows.length
 
   if (!rows.length) {
@@ -42,8 +45,8 @@ export default function ReviewTable({ rows, onChange, onToggle, onToggleAll, onR
           <h3 className="text-base font-bold text-gray-900">סקירת מוצרים</h3>
           <p className="text-sm text-gray-500">
             נבחרו <span className="font-bold text-gold-600">{selectedCount}</span> מתוך {rows.length}
-            {savableCount < selectedCount && (
-              <span className="text-amber-600"> · {selectedCount - savableCount} עם שדות חסרים</span>
+            {incompleteCount > 0 && (
+              <span className="text-amber-600"> · {incompleteCount} חסרי פרטים (אפשר לשמור ולהשלים אחר כך ב"מוצרים ב-DB")</span>
             )}
           </p>
         </div>
@@ -77,7 +80,7 @@ export default function ReviewTable({ rows, onChange, onToggle, onToggleAll, onR
               <th className="px-3 py-3">קטגוריה</th>
               <th className="px-3 py-3">רמה</th>
               <th className="px-3 py-3">מחיר מחירון</th>
-              <th className="px-3 py-3">מחיר זאף</th>
+              <th className="px-3 py-3">מחיר זאפ</th>
               <th className="px-3 py-3">מחיר שלנו</th>
               <th className="w-10 px-3 py-3"><span className="sr-only">פעולות</span></th>
             </tr>
@@ -154,7 +157,7 @@ export default function ReviewTable({ rows, onChange, onToggle, onToggleAll, onR
                       onChange={(e) => onChange(i, 'zapLow', e.target.value === '' ? undefined : Number(e.target.value))}
                       placeholder="0" dir="ltr"
                       className={`${cellInput} w-24 tabular-nums`}
-                      title="מחיר השוק הנמוך (זאף) — בסיס התמחור. שלב 3 ימלא אוטומטית."
+                      title="מחיר השוק הנמוך (זאפ) — בסיס התמחור. שלב 3 ימלא אוטומטית."
                     />
                   </td>
                   <td className="px-3 py-2 align-top">
@@ -181,7 +184,7 @@ export default function ReviewTable({ rows, onChange, onToggle, onToggleAll, onR
 
       <div className="flex items-center gap-1.5 border-t border-gray-100 p-4 text-xs text-gray-400">
         <CheckCircle2 size={13} className="text-gold-500" />
-        מחיר שלנו = מחיר זאף −5%. בחבילה הלקוח מקבל −10% מסכום הזאף. שלב 3 ימלא את מחיר הזאף אוטומטית.
+        מחיר שלנו = מחיר זאפ −5%. בחבילה הלקוח מקבל −10% מסכום הזאפ. שלב 3 ימלא את מחיר הזאפ אוטומטית.
       </div>
     </div>
   )

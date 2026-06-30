@@ -29,7 +29,7 @@ export default function PackageSummary({ result }) {
         <div className="mt-5 flex items-center gap-3 rounded-2xl bg-gold-gradient p-3.5 text-white">
           <Zap size={20} className="shrink-0" />
           <div>
-            <div className="text-[11px] uppercase tracking-wide text-white/80">חיסכון מול המחיר הזול בזאף</div>
+            <div className="text-[11px] uppercase tracking-wide text-white/80">חיסכון מול המחיר הזול בזאפ</div>
             <div className="text-lg font-bold leading-tight">
               ₪{formatNis(savingsVsZap)} <span className="text-sm font-semibold">({savingsVsZapPct}%)</span>
             </div>

@@ -20,7 +20,7 @@ const FIELD_ALIASES = {
   category:    ['category', 'type', 'קטגוריה', 'סוג', 'סוג מוצר', 'מחלקה'],
   brandTier:   ['tier', 'brandtier', 'brand tier', 'רמה', 'רמת מותג', 'דרגה'],
   price:       ['price', 'cost', 'מחיר', 'מחיר מחירון', 'מחיר קטלוגי'],
-  zapLow:      ['zaplow', 'zap', 'zap low', 'מחיר זאף', 'זאף', 'מחיר שוק', 'מחיר נמוך'],
+  zapLow:      ['zaplow', 'zap', 'zap low', 'מחיר זאפ', 'זאפ', 'מחיר זאף', 'זאף', 'מחיר שוק', 'מחיר נמוך'],
   oldPrice:    ['oldprice', 'old price', 'list price', 'מחיר ישן', 'מחיר קודם'],
   image:       ['image', 'img', 'photo', 'image url', 'תמונה', 'קישור תמונה'],
   tags:        ['tags', 'features', 'specs', 'מאפיינים', 'תגיות', 'מפרט'],

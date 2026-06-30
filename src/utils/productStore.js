@@ -106,6 +106,15 @@ export function setIngestedProducts(products = []) {
   return products
 }
 
+/** Update a single product (D1, with cache fallback). Returns the updated list. */
+export async function updateIngestedProduct(product) {
+  const server = await apiRequest('PUT', { body: product })
+  if (server) { write(server); return server }
+  const next = read().map((p) => (p.id === product.id ? { ...p, ...product } : p))
+  write(next)
+  return next
+}
+
 /** Remove a single product by id (D1, with cache fallback). */
 export async function removeIngestedProduct(id) {
   const server = await apiRequest('DELETE', { query: `id=${encodeURIComponent(id)}` })

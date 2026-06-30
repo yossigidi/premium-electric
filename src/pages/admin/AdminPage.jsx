@@ -6,12 +6,13 @@ import {
 import AdminLogin from '../../components/admin/AdminLogin'
 import IngestPanel from '../../components/admin/IngestPanel'
 import ReviewTable from '../../components/admin/ReviewTable'
+import StoredProductsTable from '../../components/admin/StoredProductsTable'
 import { isAuthed, signOut } from '../../utils/adminAuth'
 import {
-  getIngestedProducts, addIngestedProducts, clearIngestedProducts, subscribeProducts,
+  getIngestedProducts, addIngestedProducts, updateIngestedProduct,
+  removeIngestedProduct, clearIngestedProducts, subscribeProducts,
 } from '../../utils/productStore'
 import { applianceLabel } from '../../data/builderCatalog'
-import { formatNis } from '../../utils/pricing'
 import { Link } from '../../router'
 
 let keySeq = 0
@@ -43,9 +44,10 @@ export default function AdminPage() {
     setDraft((prev) => prev.map((r) => ({ ...r, _selected: checked })))
   const removeRow = (i) => setDraft((prev) => prev.filter((_, idx) => idx !== i))
 
-  // --- Save selected & valid rows to the store (commits to D1) --------------
-  const isSavable = (r) =>
-    r._selected && r.name?.trim() && r.category && ((r.price > 0) || (r.zapLow > 0))
+  // --- Save selected rows to the store (commits to D1) ----------------------
+  // Only a name is required; category/price can be completed later in the
+  // "products in DB" editor below.
+  const isSavable = (r) => r._selected && r.name?.trim()
 
   const handleSave = async () => {
     const toSave = draft
@@ -63,6 +65,9 @@ export default function AdminPage() {
       setSaving(false)
     }
   }
+
+  const handleUpdateStored = (product) => updateIngestedProduct(product)
+  const handleRemoveStored = (id) => removeIngestedProduct(id)
 
   const handleClearDb = async () => {
     if (window.confirm('למחוק את כל המוצרים שנקלטו? פעולה זו אינה הפיכה.')) {
@@ -163,20 +168,17 @@ export default function AdminPage() {
             <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-luxe">
               <div className="mb-4 flex flex-wrap gap-2">
                 {byCategory.map(([cat, n]) => (
-                  <span key={cat} className="chip">{applianceLabel(cat)} · {n}</span>
+                  <span key={cat} className="chip">{applianceLabel(cat) || 'ללא קטגוריה'} · {n}</span>
                 ))}
               </div>
-              <ul className="divide-y divide-gray-50">
-                {stored.map((p) => (
-                  <li key={p.id} className="flex items-center justify-between gap-3 py-2.5 text-sm">
-                    <div className="min-w-0">
-                      <span className="font-medium text-gray-800">{p.name}</span>
-                      <span className="text-gray-400"> · {p.brand} · {applianceLabel(p.category)}</span>
-                    </div>
-                    <span className="shrink-0 font-bold tabular-nums text-gold-600">₪{formatNis(p.zapLow ?? p.price)}</span>
-                  </li>
-                ))}
-              </ul>
+              <p className="mb-3 text-xs text-gray-400">
+                ערוך כל שדה ישירות בטבלה והשלם פרטים חסרים. כפתור השמירה נדלק כשמשנים שורה.
+              </p>
+              <StoredProductsTable
+                products={stored}
+                onUpdate={handleUpdateStored}
+                onRemove={handleRemoveStored}
+              />
             </div>
           )}
         </section>

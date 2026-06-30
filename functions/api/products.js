@@ -96,17 +96,38 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'invalid_json' }, 400)
   }
   const incoming = Array.isArray(body?.products) ? body.products : []
-  // Only rows that pass the same minimum the admin UI enforces.
-  const valid = incoming.filter(
-    (p) => p && String(p.name || '').trim() && String(p.category || '').trim()
-      && (Number(p.price) > 0 || Number(p.zapLow) > 0),
-  )
+  // A product needs only a name; category/price can be completed later via PUT.
+  const valid = incoming.filter((p) => p && String(p.name || '').trim())
   if (!valid.length) return json({ error: 'no_valid_products' }, 422)
 
   try {
     const stmt = env.DB.prepare(INSERT_SQL)
     await env.DB.batch(valid.map((p) => stmt.bind(...productToColumns(p))))
     return json({ products: await listAll(env.DB), inserted: valid.length })
+  } catch (e) {
+    return json({ error: 'db_error', message: String(e).slice(0, 300) }, 500)
+  }
+}
+
+const UPDATE_SQL = `UPDATE products SET
+  name=?, brand=?, model=?, category=?, brand_tier=?, price=?, old_price=?, zap_low=?,
+  image=?, tags=?, short_description=?, in_stock=?, source=?
+  WHERE id=?`
+
+export async function onRequestPut({ request, env }) {
+  if (!env.DB) return noDb()
+  let body
+  try {
+    body = await request.json()
+  } catch {
+    return json({ error: 'invalid_json' }, 400)
+  }
+  const id = Number(body?.id)
+  if (!Number.isInteger(id)) return json({ error: 'bad_id' }, 400)
+  if (!String(body?.name || '').trim()) return json({ error: 'name_required' }, 422)
+  try {
+    await env.DB.prepare(UPDATE_SQL).bind(...productToColumns(body), id).run()
+    return json({ products: await listAll(env.DB) })
   } catch (e) {
     return json({ error: 'db_error', message: String(e).slice(0, 300) }, 500)
   }
