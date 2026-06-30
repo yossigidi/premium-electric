@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, X, Send, Bot, User as UserIcon, HelpCircle } from 'lucide-react'
-import { products, categories } from '../data/products'
+import { useStoreProducts } from '../hooks/useStoreProducts'
 import { Link } from '../router'
 
 const fmt = (n) => new Intl.NumberFormat('he-IL').format(n)
 
 /** Simple Hebrew-aware rules bot that understands the product catalog */
-function generateReply(text) {
+function generateReply(text, products = []) {
   const q = text.toLowerCase().trim()
+
+  // Empty catalog (DB has no products yet) — don't run product-dependent rules.
+  if (!products.length) {
+    return { text: 'הקטלוג שלנו מתעדכן כעת ואנחנו מוסיפים מוצרים. אשמח לעזור במשלוחים, אחריות, או כל שאלה אחרת בינתיים!' }
+  }
 
   // Greetings
   if (/(שלום|היי|הי|hello|hi|בוקר|ערב)/i.test(q)) {
@@ -168,6 +173,7 @@ function generateReply(text) {
 }
 
 export default function AIChatBot() {
+  const products = useStoreProducts()
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState([
@@ -191,7 +197,7 @@ export default function AIChatBot() {
     setInput('')
     setTyping(true)
     setTimeout(() => {
-      const reply = generateReply(t)
+      const reply = generateReply(t, products)
       setMessages((m) => [...m, { role: 'bot', ...reply }])
       setTyping(false)
     }, 700 + Math.random() * 500)

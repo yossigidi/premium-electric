@@ -139,15 +139,13 @@ const seeded = SEED_PRODUCTS.map((p) => ({
   zapLow: p.zapLow ?? p.price,
 }))
 
-/** Base builder catalog: enriched showroom products + seed products. */
-export const builderCatalog = [...showroomProducts.map(enrich), ...seeded]
-
 /**
- * Live builder catalog: the base catalog plus any admin-ingested products
- * (phase 2). Read fresh on every call so products approved in the admin panel
- * appear in the builder without a reload.
+ * Live builder catalog — DB-only: the products the admin actually ingested into
+ * D1. Read fresh on every call so products approved in the admin panel appear in
+ * the builder without a reload. (The former showroom/seed demo catalog has been
+ * retired; the builder recommends only from the real database.)
  */
-export const getCatalog = () => [...builderCatalog, ...getIngestedProducts()]
+export const getCatalog = () => getIngestedProducts()
 
 /** All catalog products of a given appliance type. */
 export const candidatesFor = (categoryId) =>

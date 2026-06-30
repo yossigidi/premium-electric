@@ -1,19 +1,21 @@
-import { motion } from 'framer-motion'
+import { useMemo } from 'react'
 import { ArrowLeft, Flame, Sparkles } from 'lucide-react'
-import { products } from '../data/products'
 import { Link } from '../router'
 import ProductCard from './ProductCard'
-
-const featured = products
-  .filter((p) => p.badge || p.oldPrice)
-  .sort((a, b) => {
-    const aScore = (a.badge?.includes('חדש') ? 3 : 0) + (a.oldPrice ? 2 : 0) + (a.badge ? 1 : 0)
-    const bScore = (b.badge?.includes('חדש') ? 3 : 0) + (b.oldPrice ? 2 : 0) + (b.badge ? 1 : 0)
-    return bScore - aScore
-  })
-  .slice(0, 6)
+import { useStoreProducts } from '../hooks/useStoreProducts'
 
 export default function FeaturedProducts() {
+  const all = useStoreProducts()
+  // Prefer sale/new items; fall back to the most recent products so the section
+  // is never empty once the DB has products.
+  const featured = useMemo(() => {
+    const sale = all.filter((p) => p.oldPrice || p.badge)
+    const base = sale.length ? sale : [...all].reverse()
+    return base.slice(0, 6)
+  }, [all])
+
+  if (!featured.length) return null
+
   return (
     <section id="featured" className="py-20 bg-surface-200">
       <div className="container-luxe">

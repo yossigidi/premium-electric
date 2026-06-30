@@ -1,12 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Scale, X, ArrowLeft } from 'lucide-react'
 import { useCompare } from '../contexts/CompareContext'
-import { products } from '../data/products'
+import { useStoreProducts } from '../hooks/useStoreProducts'
 import { Link, useRouter } from '../router'
 
 export default function CompareBar() {
   const { ids, remove, clear, max } = useCompare()
   const { route } = useRouter()
+  const products = useStoreProducts()
   const items = ids.map((id) => products.find((p) => p.id === id)).filter(Boolean)
 
   if (route.name === 'compare') return null

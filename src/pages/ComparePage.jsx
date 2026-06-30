@@ -1,14 +1,15 @@
 import { useMemo } from 'react'
 import { X, ShoppingBag, Check, Minus, Star } from 'lucide-react'
-import { products } from '../data/products'
 import { useCompare } from '../contexts/CompareContext'
+import { useStoreProducts } from '../hooks/useStoreProducts'
 import { Link } from '../router'
 
 const fmt = (n) => new Intl.NumberFormat('he-IL').format(n)
 
 export default function ComparePage() {
   const { ids, remove, clear } = useCompare()
-  const items = useMemo(() => ids.map((id) => products.find((p) => p.id === id)).filter(Boolean), [ids])
+  const products = useStoreProducts()
+  const items = useMemo(() => ids.map((id) => products.find((p) => p.id === id)).filter(Boolean), [ids, products])
 
   if (items.length === 0) {
     return (

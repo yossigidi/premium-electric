@@ -1976,12 +1976,13 @@ function hydrateForPage(p) {
   }
 }
 
+// Storefront is DB-only: products come from the admin-managed D1 catalog.
 export const getProductById = (id) => {
   const num = Number(id)
-  const showroom = products.find((p) => p.id === num)
-  if (showroom) return showroom
   const ingested = getIngestedProducts().find((p) => p.id === num)
   return ingested ? hydrateForPage(ingested) : undefined
 }
 export const getRelatedProducts = (product, limit = 3) =>
-  products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, limit);
+  getIngestedProducts()
+    .filter((p) => p.category === product.category && p.id !== product.id)
+    .slice(0, limit);

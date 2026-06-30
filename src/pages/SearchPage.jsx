@@ -1,8 +1,9 @@
 import { useMemo, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X, SlidersHorizontal, Star, Check, ArrowDownNarrowWide } from 'lucide-react'
-import { products, categories, brands } from '../data/products'
+import { categories, brands } from '../data/products'
 import ProductCard from '../components/ProductCard'
+import { useStoreProducts } from '../hooks/useStoreProducts'
 
 const PRICE_BOUNDS = [0, 160000]
 
@@ -44,6 +45,7 @@ export default function SearchPage() {
     return () => window.removeEventListener('hashchange', onHashChange)
   }, [])
 
+  const products = useStoreProducts()
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     let list = products.filter((p) => {
@@ -64,7 +66,7 @@ export default function SearchPage() {
       default:          list = [...list].sort((a, b) => b.reviews - a.reviews)
     }
     return list
-  }, [query, cats, brandSel, priceMax, minRating, onlyInStock, onlyDiscount, sort])
+  }, [query, cats, brandSel, priceMax, minRating, onlyInStock, onlyDiscount, sort, products])
 
   const toggleCat = (id) => setCats((c) => c.includes(id) ? c.filter((x) => x !== id) : [...c, id])
   const toggleBrand = (b) => setBrandSel((s) => s.includes(b) ? s.filter((x) => x !== b) : [...s, b])

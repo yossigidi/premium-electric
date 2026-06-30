@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Home, ChevronLeft, ArrowDownNarrowWide, Package } from 'lucide-react'
-import { products, categories } from '../data/products'
+import { categories } from '../data/products'
 import { Link } from '../router'
 import ProductCard from '../components/ProductCard'
+import { useStoreProducts } from '../hooks/useStoreProducts'
 
 const sortOptions = [
   { id: 'popular',   label: 'הכי נמכרים' },
@@ -16,6 +17,7 @@ const sortOptions = [
 export default function CategoryPage({ catId }) {
   const [sort, setSort] = useState('popular')
   const category = categories.find((c) => c.id === catId)
+  const products = useStoreProducts()
 
   const list = useMemo(() => {
     let items = products.filter((p) => p.category === catId)
@@ -27,7 +29,7 @@ export default function CategoryPage({ catId }) {
       default:          items = [...items].sort((a, b) => b.reviews - a.reviews)
     }
     return items
-  }, [catId, sort])
+  }, [catId, sort, products])
 
   if (!category) {
     return (
