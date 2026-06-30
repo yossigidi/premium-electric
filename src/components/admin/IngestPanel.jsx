@@ -23,6 +23,25 @@ async function excelToCsv(file) {
   return sheet ? utils.sheet_to_csv(sheet) : ''
 }
 
+// Binary file → base64 (no data: prefix), chunked to avoid call-stack limits.
+async function fileToBase64(file) {
+  const bytes = new Uint8Array(await file.arrayBuffer())
+  let binary = ''
+  const CHUNK = 0x8000
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK))
+  }
+  return btoa(binary)
+}
+
+// Word .docx → plain text (mammoth, lazy-loaded; Vite resolves its browser build).
+async function docxToText(file) {
+  const m = await import('mammoth')
+  const extractRawText = m.extractRawText || m.default?.extractRawText
+  const { value } = await extractRawText({ arrayBuffer: await file.arrayBuffer() })
+  return value || ''
+}
+
 const SAMPLE_CSV =
   'שם,מותג,דגם,קטגוריה,רמה,מחיר,תמונה,מאפיינים,תיאור\n' +
   'מקרר סמסונג 4 דלתות,Samsung,RF65,מקרר,פרמיום,8990,,"NoFrost;700 ליטר",מקרר רחב עם תא המרה\n' +
@@ -30,7 +49,7 @@ const SAMPLE_CSV =
 
 /**
  * Multi-source ingest. CSV/paste is parsed entirely client-side; document & URL
- * sources POST to /api/ingest (Groq extraction) and degrade gracefully when the
+ * sources POST to /api/ingest (Claude extraction) and degrade gracefully when the
  * backend/key isn't configured. Extracted products bubble up via onProducts.
  */
 export default function IngestPanel({ onProducts }) {
@@ -96,14 +115,43 @@ export default function IngestPanel({ onProducts }) {
       return
     }
 
-    // Binary doc (PDF/Word): hand the raw text we can read to the server; the
-    // function calls Groq to structure it (and 503s clearly without a key).
-    if (source === 'doc') {
-      const content = await file.text().catch(() => '')
-      await sendToServer({ text: content, filename: file.name })
-    } else {
-      setError('קובץ לא נתמך בלשונית זו. ל-CSV השתמש בלשונית "טבלה / CSV".')
+    if (source !== 'doc') {
+      setError('קובץ לא נתמך בלשונית זו. ל-Excel/CSV השתמש בלשונית "טבלה / Excel".')
+      return
     }
+
+    // PDF: send the file as base64 — Claude reads it natively (incl. scanned).
+    if (/\.pdf$/.test(name)) {
+      setBusy(true)
+      let b64
+      try {
+        b64 = await fileToBase64(file)
+      } catch {
+        setError('קריאת קובץ ה-PDF נכשלה.'); setBusy(false); return
+      }
+      await sendToServer({ pdf: b64, filename: file.name })
+      return
+    }
+    // Word .docx: extract text in the browser, then structure it server-side.
+    if (/\.docx$/.test(name)) {
+      setBusy(true)
+      try {
+        const docText = await docxToText(file)
+        if (docText.trim().length < 20) { setError('לא הצלחתי לחלץ טקסט מקובץ ה-Word.'); return }
+        await sendToServer({ text: docText, filename: file.name })
+      } catch {
+        setError('קריאת קובץ ה-Word נכשלה. שמור כ-PDF ונסה שוב.')
+      } finally {
+        setBusy(false)
+      }
+      return
+    }
+    // Old binary .doc isn't reliably extractable in the browser.
+    if (/\.doc$/.test(name)) {
+      setError('פורמט .doc ישן אינו נתמך. שמור כ-PDF או כ-.docx ונסה שוב.')
+      return
+    }
+    setError('סוג קובץ לא נתמך. נתמכים: PDF, Word (.docx), טקסט.')
   }
 
   // --- Server extraction (document / URL) -----------------------------------
@@ -209,7 +257,7 @@ export default function IngestPanel({ onProducts }) {
             {busy ? <Loader2 size={28} className="animate-spin text-gold-500" /> : <UploadCloud size={28} className="text-gold-500" />}
             <span className="text-sm font-bold text-gray-800">{busy ? 'מחלץ מוצרים…' : 'גרור או בחר קובץ PDF / Word / טקסט'}</span>
             <span className="max-w-xs text-xs text-gray-400">
-              החילוץ מתבצע בשרת (Groq). ללא מפתח מוגדר — השתמש ב-CSV או בהזנה ידנית.
+              PDF נקרא ישירות ע"י Claude (גם סרוק). Word (.docx) ופורמט טקסט נתמכים גם הם.
             </span>
           </button>
         )}

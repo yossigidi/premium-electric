@@ -1,70 +1,78 @@
 // ============================================================================
-// POST /api/ingest — server-side product extraction (Cloudflare Pages Function)
+// POST /api/ingest — server-side product extraction (Cloudflare Pages Function).
 //
-// Handles the ingest sources that can't be parsed in the browser:
-//   • PDF / Word — text is extracted and handed to an LLM for structuring.
-//   • URL        — the page is fetched, stripped to text, then structured.
-// (Excel/CSV is parsed entirely client-side; see src/utils/ingestParse.js.)
+// Uses Claude (Anthropic Messages API) to structure raw product sources:
+//   • PDF  — the client sends the file as base64; Claude reads it natively
+//            (including scanned/image PDFs via vision). No browser-side text
+//            extraction, which never worked reliably for binary formats.
+//   • text — extracted Word (.docx) text, plain text, or pasted text.
+//   • URL  — the page is fetched, stripped to text, then structured.
 //
-// The LLM step uses Groq (OpenAI-compatible Chat Completions) per the plan —
-// cheap and proven; Claude can be swapped in later for messy documents. The
-// function returns rows in the SAME loose shape the client normalizer expects
+// Returns rows in the SAME loose shape the client normalizer expects
 // (src/utils/ingestParse.js → normalizeProduct), so every path converges on
 // one product shape before the review table.
 //
 // Config (Cloudflare Pages env vars / secrets):
-//   GROQ_API_KEY   — required for extraction; without it the function returns a
-//                    clear 503 so the UI can fall back to manual / CSV entry.
-//   GROQ_MODEL     — optional; defaults to a current Groq instruct model.
+//   ANTHROPIC_API_KEY — required; without it the function 503s so the UI can
+//                       fall back to CSV / Excel / manual entry.
+//   ANTHROPIC_MODEL   — optional; defaults to claude-haiku-4-5.
 // ============================================================================
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' }
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: JSON_HEADERS })
 
-const EXTRACTION_SYSTEM = `You extract electrical-appliance products from raw text into structured JSON.
-Return ONLY a JSON object: {"products": [...]}. Each product has these fields (omit unknowns):
+const EXTRACTION_SYSTEM = `You extract electrical-appliance products from the input into structured JSON.
+Return ONLY a JSON object of the form {"products": [...]} with no surrounding text or markdown.
+Each product has these fields (omit unknowns):
 name (string, Hebrew if the source is Hebrew), brand, model, category, brandTier, price (number, NIS),
 oldPrice (number), image (url), tags (array of short strings), shortDescription (string).
 category must be one of: refrigerators, ovens, cooktops, washers, dryers, dishwashers, robot-vacuums, tv, audio, computers.
 brandTier must be one of: base, designed, luxury, premium. Infer it from the brand: value brands (Electra, Beko, TCL, Hisense, Lenovo) = base; Smeg = designed; exclusive brands (Miele, Gaggenau, Liebherr, Sub-Zero) = luxury; leading brands (Samsung, LG, Bosch, Sony, Apple, Sonos) = premium.
-Do not invent products that are not in the text. Do not add commentary.`
+Do not invent products that are not in the source. Do not add commentary.`
 
-async function extractWithGroq(env, text) {
-  const apiKey = env.GROQ_API_KEY
-  if (!apiKey) {
-    return { error: 'missing_key', status: 503 }
-  }
-  const model = env.GROQ_MODEL || 'llama-3.3-70b-versatile'
+async function extractWithClaude(env, userContent) {
+  const apiKey = env.ANTHROPIC_API_KEY
+  if (!apiKey) return { error: 'missing_key', status: 503 }
+  const model = env.ANTHROPIC_MODEL || 'claude-haiku-4-5'
 
-  const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
     body: JSON.stringify({
       model,
-      temperature: 0,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: EXTRACTION_SYSTEM },
-        { role: 'user', content: text.slice(0, 24000) }, // keep within context budget
-      ],
+      max_tokens: 4096,
+      system: EXTRACTION_SYSTEM,
+      messages: [{ role: 'user', content: userContent }],
     }),
   })
 
   if (!resp.ok) {
     const detail = await resp.text().catch(() => '')
-    return { error: 'groq_failed', status: 502, detail: detail.slice(0, 500) }
+    return { error: 'claude_failed', status: 502, detail: detail.slice(0, 500) }
   }
 
   const data = await resp.json()
-  const content = data?.choices?.[0]?.message?.content || '{}'
-  try {
-    const parsed = JSON.parse(content)
-    const products = Array.isArray(parsed) ? parsed : parsed.products || []
-    return { products: Array.isArray(products) ? products : [] }
-  } catch {
-    return { error: 'bad_model_output', status: 502 }
+  const text = (data?.content || [])
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text)
+    .join('')
+    .trim()
+
+  // Claude is instructed to return pure JSON; fall back to the first {...} block.
+  const parse = (s) => { try { return JSON.parse(s) } catch { return null } }
+  let parsed = parse(text)
+  if (!parsed) {
+    const m = text.match(/\{[\s\S]*\}/)
+    if (m) parsed = parse(m[0])
   }
+  if (!parsed) return { error: 'bad_model_output', status: 502 }
+  const products = Array.isArray(parsed) ? parsed : parsed.products || []
+  return { products: Array.isArray(products) ? products : [] }
 }
 
 // Very small HTML → text reduction (no DOM in Workers runtime).
@@ -78,22 +86,36 @@ function htmlToText(html) {
     .trim()
 }
 
-async function readSourceText(body) {
-  // URL source: fetch + strip to text.
+// Build the Claude user-message content from whatever source the client sent.
+async function buildContent(body) {
+  // PDF: hand the base64 straight to Claude as a document block.
+  if (body.pdf) {
+    const data = String(body.pdf).replace(/^data:.*;base64,/, '')
+    return {
+      content: [
+        { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data } },
+        { type: 'text', text: 'Extract every product from this document into the required JSON.' },
+      ],
+    }
+  }
+  // URL: fetch + strip to text.
   if (body.url) {
     try {
       const r = await fetch(body.url, { headers: { 'User-Agent': 'PremiumElectricBot/1.0' } })
       if (!r.ok) return { error: 'fetch_failed', status: 422 }
-      const html = await r.text()
-      return { text: htmlToText(html) }
+      const text = htmlToText(await r.text())
+      if (text.length < 20) return { error: 'empty_source', status: 422 }
+      return { content: [{ type: 'text', text: `Extract products from this page text:\n\n${text.slice(0, 24000)}` }] }
     } catch {
       return { error: 'fetch_failed', status: 422 }
     }
   }
-  // PDF/Word source: the client sends already-extracted text (browser-side
-  // extraction keeps the binary off the wire); if a future client posts raw
-  // text we accept it directly here.
-  if (body.text) return { text: String(body.text) }
+  // Plain / extracted text (Word .docx text, .txt, paste).
+  if (body.text) {
+    const text = String(body.text)
+    if (text.trim().length < 20) return { error: 'empty_source', status: 422 }
+    return { content: [{ type: 'text', text: `Extract products from this text:\n\n${text.slice(0, 24000)}` }] }
+  }
   return { error: 'no_source', status: 400 }
 }
 
@@ -105,17 +127,14 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'invalid_json' }, 400)
   }
 
-  const src = await readSourceText(body)
-  if (src.error) return json({ error: src.error }, src.status)
-  if (!src.text || src.text.length < 20) {
-    return json({ error: 'empty_source' }, 422)
-  }
+  const built = await buildContent(body)
+  if (built.error) return json({ error: built.error }, built.status)
 
-  const result = await extractWithGroq(env, src.text)
+  const result = await extractWithClaude(env, built.content)
   if (result.error) {
     const message =
       result.error === 'missing_key'
-        ? 'הזנת מסמכים/אתר דורשת הגדרת GROQ_API_KEY בשרת. בינתיים ניתן לקלוט CSV או להזין ידנית.'
+        ? 'הזנת מסמכים/אתר דורשת הגדרת ANTHROPIC_API_KEY בשרת. בינתיים ניתן לקלוט Excel/CSV או להזין ידנית.'
         : 'החילוץ האוטומטי נכשל. נסה שוב או הזן ידנית.'
     return json({ error: result.error, message, detail: result.detail }, result.status)
   }
