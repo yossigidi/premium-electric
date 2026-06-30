@@ -57,7 +57,9 @@ async function extractWithClaude(env, userContent) {
     },
     body: JSON.stringify({
       model,
-      max_tokens: 4096,
+      // Generous ceiling: the full spec-sheet JSON for several products is large;
+      // a low cap truncates the JSON mid-output and breaks parsing.
+      max_tokens: 16000,
       system: EXTRACTION_SYSTEM,
       messages: [{ role: 'user', content: userContent }],
     }),
@@ -65,10 +67,11 @@ async function extractWithClaude(env, userContent) {
 
   if (!resp.ok) {
     const detail = await resp.text().catch(() => '')
-    return { error: 'claude_failed', status: 502, detail: detail.slice(0, 500) }
+    return { error: 'claude_failed', status: resp.status, detail: detail.slice(0, 500) }
   }
 
   const data = await resp.json()
+  const truncated = data?.stop_reason === 'max_tokens'
   const text = (data?.content || [])
     .filter((b) => b.type === 'text')
     .map((b) => b.text)
@@ -82,7 +85,7 @@ async function extractWithClaude(env, userContent) {
     const m = text.match(/\{[\s\S]*\}/)
     if (m) parsed = parse(m[0])
   }
-  if (!parsed) return { error: 'bad_model_output', status: 502 }
+  if (!parsed) return { error: truncated ? 'truncated' : 'bad_model_output', status: 502 }
   const products = Array.isArray(parsed) ? parsed : parsed.products || []
   return { products: Array.isArray(products) ? products : [] }
 }
@@ -153,11 +156,19 @@ export async function onRequestPost({ request, env }) {
 
   const result = await extractWithClaude(env, built.content)
   if (result.error) {
-    const message =
-      result.error === 'missing_key'
-        ? 'הזנת מסמכים/אתר דורשת הגדרת ANTHROPIC_API_KEY בשרת. בינתיים ניתן לקלוט Excel/CSV או להזין ידנית.'
-        : 'החילוץ האוטומטי נכשל. נסה שוב או הזן ידנית.'
-    return json({ error: result.error, message, detail: result.detail }, result.status)
+    const messages = {
+      missing_key: 'הזנת מסמכים/אתר דורשת הגדרת ANTHROPIC_API_KEY בשרת. בינתיים ניתן לקלוט Excel/CSV או להזין ידנית.',
+      truncated: 'המסמך עשיר מאוד והחילוץ נחתך. נסה להעלות פחות מוצרים בקובץ, או נסה שוב.',
+      bad_model_output: 'החילוץ חזר בפורמט לא תקין. נסה שוב.',
+    }
+    let message = messages[result.error] || 'החילוץ האוטומטי נכשל. נסה שוב או הזן ידנית.'
+    // claude_failed carries the upstream HTTP status (rate limit, too-large PDF…)
+    if (result.error === 'claude_failed') {
+      if (result.status === 429) message = 'השרת עמוס כרגע (מגבלת קצב). המתן רגע ונסה שוב.'
+      else if (result.status === 413) message = 'הקובץ גדול מדי. נסה PDF קטן יותר או פצל אותו.'
+      else message = `החילוץ נכשל (שגיאת שרת ${result.status}). נסה שוב או הזן ידנית.`
+    }
+    return json({ error: result.error, message, detail: result.detail }, result.status === 503 ? 503 : 502)
   }
 
   return json({ products: result.products, count: result.products.length })
